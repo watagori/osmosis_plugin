@@ -1,5 +1,5 @@
-# osmosis plugin 開発用(非公開)
+# osmosis plugin
 
 ## For test 
-$ pip install -e .[test]
-$ pytest 
+$ pip install -e .[test]  
+$ pytest --cov=src --cov-branch --cov-report=term-missing -vv
