@@ -9,10 +9,9 @@ setup(
     author='watagori',
     url='https://github.com/ca3-caaip/ca3-caaip',
 
-    install_requires=[
-        # Github Private Repository - needs entry in `dependency_links`
-        'senkalib'
-    ],
+    extras_require={
+        "test": ["pytest", "pytest-cov", "senkalib"]
+    },
 
     packages=find_packages('src'),
     package_dir={'': 'src'}
