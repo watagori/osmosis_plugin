@@ -54,6 +54,11 @@ class OsmosisPlugin(CaajPlugin):
         caaj_main = OsmosisPlugin.__get_caaj_begin_unlocking(transaction)
         return caaj_main
 
+      elif transaction_type == "MsgJoinSwapExternAmountIn":
+        caaj_main = OsmosisPlugin.__get_caaj_join_swap_extern_amount_in(
+            transaction)
+        return caaj_main
+
   @classmethod
   def __get_caaj_swap(cls, transaction) -> CaajJournal:
     # data from "type":""event_list"
@@ -321,6 +326,44 @@ class OsmosisPlugin(CaajPlugin):
     caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, owner)
 
     return[caaj_fee]
+
+  @ classmethod
+  def __get_caaj_join_swap_extern_amount_in(cls, transaction):
+    event_list = OsmosisPlugin.__get_event_list(transaction, "transfer")
+
+    sender = OsmosisPlugin.__get_attribute_list(
+        event_list, "sender")[0]['value']
+    recipient = OsmosisPlugin.__get_attribute_list(
+        event_list, "recipient")[0]['value']
+    amount = OsmosisPlugin.__get_attribute_list(
+        event_list, "amount")[0]['value']
+
+    tokenin_amount = Decimal(
+        re.search(r'\d+', amount).group()) / Decimal(EXA)
+
+    tokenout_amount = Decimal(
+        re.search(r'\d+', amount).group()) / Decimal(EXA)
+
+    tokenin_denom = amount[re.search(r'\d+', amount).end():]
+    tokenout_denom = amount[re.search(r'\d+', amount).end():]
+
+    caaj_main = {
+        "time": transaction.get_timestamp(),
+        "transaction_id": transaction.transaction_id,
+        "debit_title": "SPOT",
+        "debit_amount": {tokenout_denom: str(tokenout_amount)},
+        "debit_from": recipient,
+        "debit_to": sender,
+        "credit_title": "SPOT",
+        "credit_amount": {tokenin_denom: str(tokenin_amount)},
+        "credit_from": sender,
+        "credit_to": recipient,
+        "comment": "osmosis transfer"
+    }
+
+    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, sender)
+
+    return [caaj_main, caaj_fee]
 
   @ classmethod
   def __get_event_list(cls, transaction, event_type):
