@@ -50,7 +50,7 @@ class OsmosisPlugin(CaajPlugin):
         caaj_main = OsmosisPlugin.__get_caaj_send(transaction)
         return caaj_main
 
-      elif transaction_type == "MsgbeginUnlocking":
+      elif transaction_type == "MsgBeginUnlocking":
         caaj_main = OsmosisPlugin.__get_caaj_begin_unlocking(transaction)
         return caaj_main
 
