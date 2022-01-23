@@ -237,7 +237,7 @@ class OsmosisPlugin(CaajPlugin):
         "credit_amount": {tokenin_denom: str(tokenin_amount)},
         "credit_from": address,
         "credit_to": recipients[1]['value'],
-        "comment": "osmosis liquidity add"
+        "comment": "osmosis liquidity remove"
     }
 
     caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
@@ -358,7 +358,7 @@ class OsmosisPlugin(CaajPlugin):
         "credit_amount": {tokenin_denom: str(tokenin_amount)},
         "credit_from": sender,
         "credit_to": recipient,
-        "comment": "osmosis transfer"
+        "comment": "osmosis join swap"
     }
 
     caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, sender)
