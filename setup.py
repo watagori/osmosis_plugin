@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='pancake_plugin',
+    name='osmosis_plugin',
     version='0.0.1',
     license='mit',
     description='plugin for osmosis',
