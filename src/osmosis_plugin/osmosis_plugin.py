@@ -103,7 +103,7 @@ class OsmosisPlugin(CaajPlugin):
     caaj_fee = {
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
-        "debit_title": "SPOT",
+        "debit_title": "FEE",
         "debit_amount": {"OSMO": str(transaction.get_transaction_fee() / Decimal(MEGA))},
         "debit_from": "0x0000000000000000000000000000000000000000",
         "debit_to": address,

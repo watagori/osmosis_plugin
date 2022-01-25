@@ -18,7 +18,6 @@ class TestOsmosisPlugin():
 
   def test_get_caajs_00(self):
     # fee
-    address = "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m"
 
     test_data = TestOsmosisPlugin.__get_test_data("swap")
     transaction = OsmosisTransaction(test_data)
@@ -26,7 +25,7 @@ class TestOsmosisPlugin():
     caaj_fee_model = {
         "time": "2022-01-21 02:47:05",
         "transaction_id": "97A5C4A33FA36397A342D34D576AC07BA3F5CB5B7274E2BAF7092470A681FDEB",
-        "debit_title": "SPOT",
+        "debit_title": "FEE",
         "debit_amount": {"OSMO": "0"},
         "debit_from": "0x0000000000000000000000000000000000000000",
         "debit_to": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
