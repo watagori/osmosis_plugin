@@ -17,8 +17,6 @@ class TestOsmosisPlugin():
     assert chain_type is False
 
   def test_get_caajs_00(self):
-    # fee
-
     test_data = TestOsmosisPlugin.__get_test_data("swap")
     transaction = OsmosisTransaction(test_data)
     caajs = OsmosisPlugin.get_caajs(transaction)
@@ -48,7 +46,7 @@ class TestOsmosisPlugin():
         "debit_from": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         "debit_to": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         "credit_title": "SPOT",
-        "credit_amount": {"uosmo": "0.01"},
+        "credit_amount": {"osmo": "0.01"},
         "credit_from": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         "credit_to": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         "comment": "osmosis transactino fee"
@@ -72,7 +70,7 @@ class TestOsmosisPlugin():
         "debit_to": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         "credit_title": "SPOT",
         "credit_amount": {"ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED": "0.005146",
-                          "uosmo": "0.009969"},
+                          "osmo": "0.009969"},
         "credit_from": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         "credit_to": "osmo1h7yfu7x4qsv2urnkl4kzydgxegdfyjdry5ee4xzj98jwz0uh07rqdkmprr",
         "comment": "osmosis transactino fee"
@@ -114,7 +112,7 @@ class TestOsmosisPlugin():
     caaj_main_model = {
         "debit_title": "SPOT",
         "debit_amount": {"ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED": "0.001382",
-                         "uosmo": "0.002678"},
+                         "osmo": "0.002678"},
         "debit_from": "osmo1h7yfu7x4qsv2urnkl4kzydgxegdfyjdry5ee4xzj98jwz0uh07rqdkmprr",
         "debit_to": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         "credit_title": "LIQUIDITY",

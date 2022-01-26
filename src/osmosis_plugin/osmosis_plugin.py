@@ -2,6 +2,7 @@ import re
 from decimal import Decimal
 from senkalib.caaj_plugin import CaajPlugin
 from senkalib.caaj_journal import CaajJournal
+from src.osmosis_plugin.get_token_value import GetTokenValue
 
 MEGA = 10**6
 
@@ -64,52 +65,50 @@ class OsmosisPlugin(CaajPlugin):
     # data from "type":""event_list"
     event_list = OsmosisPlugin.__get_event_list(transaction, "token_swapped")
 
-    address = OsmosisPlugin.__get_attribute_list(
+    user_address = OsmosisPlugin.__get_attribute_list(
         event_list, "sender")[0]['value']
     token_in = OsmosisPlugin.__get_attribute_list(
         event_list, "tokens_in")[0]['value']
     token_out = OsmosisPlugin.__get_attribute_list(
         event_list, "tokens_out")[0]['value']
 
-    tokenin_amount = Decimal(
-        re.search(r'\d+', token_in).group()) / Decimal(MEGA)
+    tokenin_amount = GetTokenValue.get_token_amount(token_in)
 
-    tokenout_amount = Decimal(
-        re.search(r'\d+', token_out).group()) / Decimal(MEGA)
+    tokenout_amount = GetTokenValue.get_token_amount(token_out)
 
-    tokenin_denom = token_in[re.search(r'\d+', token_in).end():]
-    tokenout_denom = token_out[re.search(r'\d+', token_out).end():]
+    tokenin_name = GetTokenValue.get_token_name(token_in)
+    tokenout_name = GetTokenValue.get_token_name(token_out)
 
     caaj_main = {
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
         "debit_title": "SPOT",
-        "debit_amount": {tokenout_denom: str(tokenout_amount)},
-        "debit_from": address,
-        "debit_to": address,
+        "debit_amount": {tokenout_name: tokenout_amount},
+        "debit_from": user_address,
+        "debit_to": user_address,
         "credit_title": "SPOT",
-        "credit_amount": {tokenin_denom: str(tokenin_amount)},
-        "credit_from": address,
-        "credit_to": address,
+        "credit_amount": {tokenin_name: tokenin_amount},
+        "credit_from": user_address,
+        "credit_to": user_address,
         "comment": "osmosis swap"
     }
 
-    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
+    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, user_address)
 
     return [caaj_main, caaj_fee]
 
   @ classmethod
-  def __get_caaj_fee(cls, transaction, address) -> dict:
+  def __get_caaj_fee(cls, transaction, user_address) -> dict:
     caaj_fee = {
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
         "debit_title": "FEE",
         "debit_amount": {"OSMO": str(transaction.get_transaction_fee() / Decimal(MEGA))},
         "debit_from": "0x0000000000000000000000000000000000000000",
-        "debit_to": address,
+        "debit_to": user_address,
         "credit_title": "SPOT",
         "credit_amount": {"OSMO": str(transaction.get_transaction_fee() / Decimal(MEGA))},
-        "credit_from": address,
+        "credit_from": user_address,
         "credit_to": "0x0000000000000000000000000000000000000000",
         "comment": "osmosis transactino fee"
     }
@@ -122,42 +121,36 @@ class OsmosisPlugin(CaajPlugin):
 
     senders = OsmosisPlugin.__get_attribute_list(event_list, "sender")
     recipients = OsmosisPlugin.__get_attribute_list(event_list, "recipient")
-    amounts = OsmosisPlugin.__get_attribute_list(event_list, "amount")
+    token_values = OsmosisPlugin.__get_attribute_list(event_list, "amount")
 
-    address = senders[0]['value']
+    user_address = senders[0]['value']
 
-    credit_amounts = amounts[0]['value'].split(",")
+    credit_amounts = token_values[0]['value'].split(",")
 
-    tokenin_amount_0 = Decimal(
-        re.search(r'\d+', credit_amounts[0]).group()) / Decimal(MEGA)
-    tokenin_amount_1 = Decimal(
-        re.search(r'\d+', credit_amounts[1]).group()) / Decimal(MEGA)
+    credit_amount_0 = GetTokenValue.get_token_amount(credit_amounts[0])
+    credit_amount_1 = GetTokenValue.get_token_amount(credit_amounts[1])
 
-    tokenout_amount = Decimal(
-        re.search(r'\d+', amounts[1]['value']).group()) / Decimal(EXA)
+    debit_amount = GetTokenValue.get_token_amount(token_values[1]['value'])
 
-    tokenin_denom_0 = credit_amounts[0][re.search(
-        r'\d+', credit_amounts[0]).end():]
-    tokenin_denom_1 = credit_amounts[1][re.search(
-        r'\d+', credit_amounts[1]).end():]
-    tokenout_denom = amounts[1]['value'][re.search(
-        r'\d+', amounts[1]['value']).end():]
+    credit_name_0 = GetTokenValue.get_token_name(credit_amounts[0])
+    credit_name_1 = GetTokenValue.get_token_name(credit_amounts[1])
+    debit_name = GetTokenValue.get_token_name(token_values[1]['value'])
 
     caaj_main = {
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
         "debit_title": "LIQUIDITY",
-        "debit_amount": {tokenout_denom: str(tokenout_amount)},
+        "debit_amount": {debit_name: debit_amount},
         "debit_from": senders[1]['value'],
-        "debit_to": address,
+        "debit_to": user_address,
         "credit_title": "SPOT",
-        "credit_amount": {tokenin_denom_0: str(tokenin_amount_0), tokenin_denom_1: str(tokenin_amount_1)},
-        "credit_from": address,
+        "credit_amount": {credit_name_0: credit_amount_0, credit_name_1: credit_amount_1},
+        "credit_from": user_address,
         "credit_to": recipients[0]['value'],
         "comment": "osmosis liquidity add"
     }
 
-    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
+    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, user_address)
 
     return [caaj_main, caaj_fee]
 
@@ -165,37 +158,35 @@ class OsmosisPlugin(CaajPlugin):
   def __get_caaj_start_farming(cls, transaction) -> CaajJournal:
     event_list = OsmosisPlugin.__get_event_list(transaction, "transfer")
 
-    address = OsmosisPlugin.__get_attribute_list(
+    user_address = OsmosisPlugin.__get_attribute_list(
         event_list, "sender")[0]['value']
     recipient = OsmosisPlugin.__get_attribute_list(
         event_list, "recipient")[0]['value']
-    amount = OsmosisPlugin.__get_attribute_list(
+    token_value = OsmosisPlugin.__get_attribute_list(
         event_list, "amount")[0]['value']
 
-    tokenin_amount = Decimal(
-        re.search(r'\d+', amount).group()) / Decimal(EXA)
+    credit_amount = GetTokenValue.get_token_amount(token_value)
 
-    tokenout_amount = Decimal(
-        re.search(r'\d+', amount).group()) / Decimal(EXA)
+    debit_amount = GetTokenValue.get_token_amount(token_value)
 
-    tokenin_denom = amount[re.search(r'\d+', amount).end():]
-    tokenout_denom = amount[re.search(r'\d+', amount).end():]
+    credit_name = GetTokenValue.get_token_name(token_value)
+    debit_name = GetTokenValue.get_token_name(token_value)
 
     caaj_main = {
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
         "debit_title": "STAKING",
-        "debit_amount": {tokenout_denom: str(tokenout_amount)},
+        "debit_amount": {debit_name: debit_amount},
         "debit_from": recipient,
-        "debit_to": address,
+        "debit_to": user_address,
         "credit_title": "LIQUIDITY",
-        "credit_amount": {tokenin_denom: str(tokenin_amount)},
-        "credit_from": address,
+        "credit_amount": {credit_name: credit_amount},
+        "credit_from": user_address,
         "credit_to": recipient,
         "comment": "osmosis staking"
     }
 
-    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
+    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, user_address)
 
     return [caaj_main, caaj_fee]
 
@@ -205,42 +196,36 @@ class OsmosisPlugin(CaajPlugin):
 
     senders = OsmosisPlugin.__get_attribute_list(event_list, "sender")
     recipients = OsmosisPlugin.__get_attribute_list(event_list, "recipient")
-    amounts = OsmosisPlugin.__get_attribute_list(event_list, "amount")
+    token_values = OsmosisPlugin.__get_attribute_list(event_list, "amount")
 
-    address = senders[1]['value']
+    user_address = senders[1]['value']
 
-    debit_amounts = amounts[0]['value'].split(",")
+    debit_amounts = token_values[0]['value'].split(",")
 
-    tokenout_amount_0 = Decimal(
-        re.search(r'\d+', debit_amounts[0]).group()) / Decimal(MEGA)
-    tokenout_amount_1 = Decimal(
-        re.search(r'\d+', debit_amounts[1]).group()) / Decimal(MEGA)
+    debit_amount_0 = GetTokenValue.get_token_amount(debit_amounts[0])
+    debit_amount_1 = GetTokenValue.get_token_amount(debit_amounts[1])
 
-    tokenin_amount = Decimal(
-        re.search(r'\d+', amounts[1]['value']).group()) / Decimal(EXA)
+    credit_amount = GetTokenValue.get_token_amount(token_values[1]['value'])
 
-    tokenout_denom_0 = debit_amounts[0][re.search(
-        r'\d+', debit_amounts[0]).end():]
-    tokenout_denom_1 = debit_amounts[1][re.search(
-        r'\d+', debit_amounts[1]).end():]
-    tokenin_denom = amounts[1]['value'][re.search(
-        r'\d+', amounts[1]['value']).end():]
+    debit_name_0 = GetTokenValue.get_token_name(debit_amounts[0])
+    debit_name_1 = GetTokenValue.get_token_name(debit_amounts[1])
+    credit_name = GetTokenValue.get_token_name(token_values[1]['value'])
 
     caaj_main = {
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
         "debit_title": "SPOT",
-        "debit_amount":  {tokenout_denom_0: str(tokenout_amount_0), tokenout_denom_1: str(tokenout_amount_1)},
+        "debit_amount":  {debit_name_0: debit_amount_0, debit_name_1: debit_amount_1},
         "debit_from": senders[0]['value'],
-        "debit_to": address,
+        "debit_to": user_address,
         "credit_title": "LIQUIDITY",
-        "credit_amount": {tokenin_denom: str(tokenin_amount)},
-        "credit_from": address,
+        "credit_amount": {credit_name: credit_amount},
+        "credit_from": user_address,
         "credit_to": recipients[1]['value'],
         "comment": "osmosis liquidity remove"
     }
 
-    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
+    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, user_address)
 
     return [caaj_main, caaj_fee]
 
@@ -255,24 +240,23 @@ class OsmosisPlugin(CaajPlugin):
     amount = OsmosisPlugin.__get_attribute_list(
         event_list, "amount")[0]['value']
 
-    tokenin_amount = Decimal(
-        re.search(r'\d+', amount).group()) / Decimal(EXA)
+    tokenin_amount = GetTokenValue.get_token_amount(amount)
 
     tokenout_amount = Decimal(
         re.search(r'\d+', amount).group()) / Decimal(EXA)
 
-    tokenin_denom = amount[re.search(r'\d+', amount).end():]
-    tokenout_denom = amount[re.search(r'\d+', amount).end():]
+    tokenin_name = amount[re.search(r'\d+', amount).end():]
+    tokenout_name = amount[re.search(r'\d+', amount).end():]
 
     caaj_main = {
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
         "debit_title": "SPOT",
-        "debit_amount": {tokenout_denom: str(tokenout_amount)},
+        "debit_amount": {tokenout_name: str(tokenout_amount)},
         "debit_from": recipient,
         "debit_to": sender,
         "credit_title": "SPOT",
-        "credit_amount": {tokenin_denom: str(tokenin_amount)},
+        "credit_amount": {tokenin_name: str(tokenin_amount)},
         "credit_from": sender,
         "credit_to": recipient,
         "comment": "osmosis transfer"
@@ -299,18 +283,18 @@ class OsmosisPlugin(CaajPlugin):
     tokenout_amount = Decimal(
         re.search(r'\d+', amount).group()) / Decimal(EXA)
 
-    tokenin_denom = amount[re.search(r'\d+', amount).end():]
-    tokenout_denom = amount[re.search(r'\d+', amount).end():]
+    tokenin_name = amount[re.search(r'\d+', amount).end():]
+    tokenout_name = amount[re.search(r'\d+', amount).end():]
 
     caaj_main = {
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
         "debit_title": "SPOT",
-        "debit_amount": {tokenout_denom: str(tokenout_amount)},
+        "debit_amount": {tokenout_name: str(tokenout_amount)},
         "debit_from": recipient,
         "debit_to": sender,
         "credit_title": "SPOT",
-        "credit_amount": {tokenin_denom: str(tokenin_amount)},
+        "credit_amount": {tokenin_name: str(tokenin_amount)},
         "credit_from": sender,
         "credit_to": recipient,
         "comment": "osmosis transfer"
@@ -344,18 +328,18 @@ class OsmosisPlugin(CaajPlugin):
     tokenout_amount = Decimal(
         re.search(r'\d+', amount).group()) / Decimal(EXA)
 
-    tokenin_denom = amount[re.search(r'\d+', amount).end():]
-    tokenout_denom = amount[re.search(r'\d+', amount).end():]
+    tokenin_name = amount[re.search(r'\d+', amount).end():]
+    tokenout_name = amount[re.search(r'\d+', amount).end():]
 
     caaj_main = {
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
         "debit_title": "SPOT",
-        "debit_amount": {tokenout_denom: str(tokenout_amount)},
+        "debit_amount": {tokenout_name: str(tokenout_amount)},
         "debit_from": recipient,
         "debit_to": sender,
         "credit_title": "SPOT",
-        "credit_amount": {tokenin_denom: str(tokenin_amount)},
+        "credit_amount": {tokenin_name: str(tokenin_amount)},
         "credit_from": sender,
         "credit_to": recipient,
         "comment": "osmosis join swap"
