@@ -3,7 +3,6 @@ from decimal import Decimal
 from senkalib.chain.transaction import Transaction
 from senkalib.caaj_plugin import CaajPlugin
 from senkalib.caaj_journal import CaajJournal
-from src.osmosis_plugin.get_token_value import GetTokenValue
 
 MEGA = 10**6
 
@@ -75,12 +74,12 @@ class OsmosisPlugin(CaajPlugin):
     token_out = OsmosisPlugin.__get_attribute_list(
         event_data, "tokens_out")[0]['value']
 
-    tokenin_amount = GetTokenValue.get_token_amount(token_in)
+    tokenin_amount = OsmosisPlugin.__get_token_amount(token_in)
 
-    tokenout_amount = GetTokenValue.get_token_amount(token_out)
+    tokenout_amount = OsmosisPlugin.__get_token_amount(token_out)
 
-    tokenin_name = GetTokenValue.get_token_name(token_in)
-    tokenout_name = GetTokenValue.get_token_name(token_out)
+    tokenin_name = OsmosisPlugin.__get_token_name(token_in)
+    tokenout_name = OsmosisPlugin.__get_token_name(token_out)
 
     caaj_main = {
         "time": transaction.get_timestamp(),
@@ -130,14 +129,14 @@ class OsmosisPlugin(CaajPlugin):
 
     credit_amounts = token_values[0]['value'].split(",")
 
-    credit_amount_0 = GetTokenValue.get_token_amount(credit_amounts[0])
-    credit_amount_1 = GetTokenValue.get_token_amount(credit_amounts[1])
+    credit_amount_0 = OsmosisPlugin.__get_token_amount(credit_amounts[0])
+    credit_amount_1 = OsmosisPlugin.__get_token_amount(credit_amounts[1])
 
-    debit_amount = GetTokenValue.get_token_amount(token_values[1]['value'])
+    debit_amount = OsmosisPlugin.__get_token_amount(token_values[1]['value'])
 
-    credit_name_0 = GetTokenValue.get_token_name(credit_amounts[0])
-    credit_name_1 = GetTokenValue.get_token_name(credit_amounts[1])
-    debit_name = GetTokenValue.get_token_name(token_values[1]['value'])
+    credit_name_0 = OsmosisPlugin.__get_token_name(credit_amounts[0])
+    credit_name_1 = OsmosisPlugin.__get_token_name(credit_amounts[1])
+    debit_name = OsmosisPlugin.__get_token_name(token_values[1]['value'])
 
     caaj_main = {
         "time": transaction.get_timestamp(),
@@ -168,12 +167,12 @@ class OsmosisPlugin(CaajPlugin):
     token_value = OsmosisPlugin.__get_attribute_list(
         event_data, "amount")[0]['value']
 
-    credit_amount = GetTokenValue.get_token_amount(token_value)
+    credit_amount = OsmosisPlugin.__get_token_amount(token_value)
 
-    debit_amount = GetTokenValue.get_token_amount(token_value)
+    debit_amount = OsmosisPlugin.__get_token_amount(token_value)
 
-    credit_name = GetTokenValue.get_token_name(token_value)
-    debit_name = GetTokenValue.get_token_name(token_value)
+    credit_name = OsmosisPlugin.__get_token_name(token_value)
+    debit_name = OsmosisPlugin.__get_token_name(token_value)
 
     caaj_main = {
         "time": transaction.get_timestamp(),
@@ -205,14 +204,14 @@ class OsmosisPlugin(CaajPlugin):
 
     debit_amounts = token_values[0]['value'].split(",")
 
-    debit_amount_0 = GetTokenValue.get_token_amount(debit_amounts[0])
-    debit_amount_1 = GetTokenValue.get_token_amount(debit_amounts[1])
+    debit_amount_0 = OsmosisPlugin.__get_token_amount(debit_amounts[0])
+    debit_amount_1 = OsmosisPlugin.__get_token_amount(debit_amounts[1])
 
-    credit_amount = GetTokenValue.get_token_amount(token_values[1]['value'])
+    credit_amount = OsmosisPlugin.__get_token_amount(token_values[1]['value'])
 
-    debit_name_0 = GetTokenValue.get_token_name(debit_amounts[0])
-    debit_name_1 = GetTokenValue.get_token_name(debit_amounts[1])
-    credit_name = GetTokenValue.get_token_name(token_values[1]['value'])
+    debit_name_0 = OsmosisPlugin.__get_token_name(debit_amounts[0])
+    debit_name_1 = OsmosisPlugin.__get_token_name(debit_amounts[1])
+    credit_name = OsmosisPlugin.__get_token_name(token_values[1]['value'])
 
     caaj_main = {
         "time": transaction.get_timestamp(),
@@ -243,7 +242,7 @@ class OsmosisPlugin(CaajPlugin):
     amount = OsmosisPlugin.__get_attribute_list(
         event_data, "amount")[0]['value']
 
-    tokenin_amount = GetTokenValue.get_token_amount(amount)
+    tokenin_amount = OsmosisPlugin.__get_token_amount(amount)
 
     tokenout_amount = Decimal(
         re.search(r'\d+', amount).group()) / Decimal(EXA)
@@ -366,3 +365,25 @@ class OsmosisPlugin(CaajPlugin):
         lambda attribute: attribute['key'] == attribute_key, event_data['attributes']))
 
     return attribute_list
+
+  @classmethod
+  def __get_token_name(cls, value) -> str:
+    token_name = value[re.search(r'\d+', value).end():]
+    if token_name == "uosmo":
+      token_name = "osmo"
+    elif token_name == "uion":
+      token_name = "ion"
+
+    return token_name
+
+  @classmethod
+  def __get_token_amount(cls, value) -> int:
+
+    if "pool" in value:
+      token_amount = str(Decimal(
+          re.search(r'\d+', value).group()) / Decimal(EXA))
+
+    else:
+      token_amount = str(Decimal(
+          re.search(r'\d+', value).group()) / Decimal(MEGA))
+    return token_amount
