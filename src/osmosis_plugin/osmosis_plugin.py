@@ -63,6 +63,8 @@ class OsmosisPlugin(CaajPlugin):
 
       else:
         return [caaj_main]
+    else:
+      return []
 
   @classmethod
   def __get_caaj_swap(cls, transaction: Transaction) -> CaajJournal:
