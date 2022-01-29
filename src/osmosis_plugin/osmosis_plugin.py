@@ -21,50 +21,48 @@ class OsmosisPlugin(CaajPlugin):
       return False
 
   @classmethod
-  def get_caajs(cls, transaction: Transaction) -> CaajJournal:
+  def get_caajs(cls, address: str, transaction: Transaction) -> CaajJournal:
     if transaction.get_transaction()['data']['code'] == 0:
       transaction_type = \
           transaction.get_transaction(
           )['data']['tx']['body']['messages'][0]['@type'].split('.')[-1]
 
       if transaction_type == "MsgSwapExactAmountIn":
-        caaj = OsmosisPlugin.__get_caaj_swap(transaction)
-        return caaj
+        caaj_main = OsmosisPlugin.__get_caaj_swap(transaction)
 
       elif transaction_type == "MsgJoinPool":
-        caaj = OsmosisPlugin.__get_caaj_join_pool(transaction)
-        return caaj
+        caaj_main = OsmosisPlugin.__get_caaj_join_pool(transaction)
 
       elif transaction_type == "MsgLockTokens":
-        caaj = OsmosisPlugin.__get_caaj_start_farming(transaction)
-        return caaj
+        caaj_main = OsmosisPlugin.__get_caaj_start_farming(transaction)
 
       elif transaction_type == "MsgExitPool":
-        caaj = OsmosisPlugin.__get_caaj_exit_pool(transaction)
-        return caaj
+        caaj_main = OsmosisPlugin.__get_caaj_exit_pool(transaction)
 
       elif transaction_type == "MsgTransfer":
         # ibc transfer
         caaj_main = OsmosisPlugin.__get_caaj_ibc_transfer(transaction)
-        return caaj_main
 
       elif transaction_type == "MsgSend":
         # send
         caaj_main = OsmosisPlugin.__get_caaj_send(transaction)
-        return caaj_main
 
       elif transaction_type == "MsgBeginUnlocking":
         caaj_main = OsmosisPlugin.__get_caaj_begin_unlocking(transaction)
-        return caaj_main
 
       elif transaction_type == "MsgJoinSwapExternAmountIn":
         caaj_main = OsmosisPlugin.__get_caaj_join_swap_extern_amount_in(
             transaction)
-        return caaj_main
 
       elif transaction_type == "MsgUpdateClient":
         caaj_main = OsmosisPlugin.__get_caaj_ibc_received(transaction)
-        return caaj_main
+
+    if transaction.get_transaction_fee != 0:
+      caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
+      return [caaj_main, caaj_fee]
+
+    else:
+      return [caaj_main]
 
   @classmethod
   def __get_caaj_swap(cls, transaction: Transaction) -> CaajJournal:
@@ -99,27 +97,7 @@ class OsmosisPlugin(CaajPlugin):
         "comment": "osmosis swap"
     }
 
-    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, user_address)
-
-    return [caaj_main, caaj_fee]
-
-  @ classmethod
-  def __get_caaj_fee(cls, transaction: Transaction, user_address: str) -> CaajJournal:
-    caaj_fee = {
-        "time": transaction.get_timestamp(),
-        "transaction_id": transaction.transaction_id,
-        "debit_title": "FEE",
-        "debit_amount": {"OSMO": str(transaction.get_transaction_fee() / Decimal(MEGA))},
-        "debit_from": "0x0000000000000000000000000000000000000000",
-        "debit_to": user_address,
-        "credit_title": "SPOT",
-        "credit_amount": {"OSMO": str(transaction.get_transaction_fee() / Decimal(MEGA))},
-        "credit_from": user_address,
-        "credit_to": "0x0000000000000000000000000000000000000000",
-        "comment": "osmosis transactino fee"
-    }
-
-    return caaj_fee
+    return caaj_main
 
   @ classmethod
   def __get_caaj_join_pool(cls, transaction: Transaction) -> CaajJournal:
@@ -156,9 +134,7 @@ class OsmosisPlugin(CaajPlugin):
         "comment": "osmosis liquidity add"
     }
 
-    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, user_address)
-
-    return [caaj_main, caaj_fee]
+    return caaj_main
 
   @ classmethod
   def __get_caaj_start_farming(cls, transaction: Transaction) -> CaajJournal:
@@ -192,9 +168,7 @@ class OsmosisPlugin(CaajPlugin):
         "comment": "osmosis staking"
     }
 
-    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, user_address)
-
-    return [caaj_main, caaj_fee]
+    return caaj_main
 
   @ classmethod
   def __get_caaj_exit_pool(cls, transaction: Transaction) -> CaajJournal:
@@ -231,9 +205,7 @@ class OsmosisPlugin(CaajPlugin):
         "comment": "osmosis liquidity remove"
     }
 
-    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, user_address)
-
-    return [caaj_main, caaj_fee]
+    return caaj_main
 
   @ classmethod
   def __get_caaj_ibc_transfer(cls, transaction: Transaction) -> CaajJournal:
@@ -268,9 +240,7 @@ class OsmosisPlugin(CaajPlugin):
         "comment": "osmosis transfer"
     }
 
-    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, sender)
-
-    return [caaj_main, caaj_fee]
+    return caaj_main
 
   @ classmethod
   def __get_caaj_send(cls, transaction: Transaction) -> CaajJournal:
@@ -306,9 +276,7 @@ class OsmosisPlugin(CaajPlugin):
         "comment": "osmosis transfer"
     }
 
-    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, sender)
-
-    return [caaj_main, caaj_fee]
+    return caaj_main
 
   @ classmethod
   def __get_caaj_begin_unlocking(cls, transaction: Transaction) -> CaajJournal:
@@ -351,9 +319,7 @@ class OsmosisPlugin(CaajPlugin):
         "comment": "osmosis join swap"
     }
 
-    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, sender)
-
-    return [caaj_main, caaj_fee]
+    return caaj_main
 
   @classmethod
   def __get_caaj_ibc_received(cls, transaction: Transaction):
@@ -365,7 +331,7 @@ class OsmosisPlugin(CaajPlugin):
           lambda event: event['type'] == "transfer", transaction.get_transaction(
           )['data']['logs'][i]['events']))
 
-      if event_transfer_check != []:
+      if event_transfer_check:
         event_transfer.append(event_transfer_check)
 
     sender = OsmosisPlugin.__get_attribute_list(
@@ -400,9 +366,25 @@ class OsmosisPlugin(CaajPlugin):
         "comment": "osmosis transfer"
     }
 
-    caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, sender)
+    return caaj_main
 
-    return [caaj_main, caaj_fee]
+  @ classmethod
+  def __get_caaj_fee(cls, transaction: Transaction, user_address: str) -> CaajJournal:
+    caaj_fee = {
+        "time": transaction.get_timestamp(),
+        "transaction_id": transaction.transaction_id,
+        "debit_title": "FEE",
+        "debit_amount": {"OSMO": str(transaction.get_transaction_fee() / Decimal(MEGA))},
+        "debit_from": "0x0000000000000000000000000000000000000000",
+        "debit_to": user_address,
+        "credit_title": "SPOT",
+        "credit_amount": {"OSMO": str(transaction.get_transaction_fee() / Decimal(MEGA))},
+        "credit_from": user_address,
+        "credit_to": "0x0000000000000000000000000000000000000000",
+        "comment": "osmosis transactino fee"
+    }
+
+    return caaj_fee
 
   @ classmethod
   def __get_event_data(cls, transaction: Transaction, event_type: str) -> dict:
