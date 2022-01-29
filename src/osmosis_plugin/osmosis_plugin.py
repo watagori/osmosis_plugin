@@ -350,6 +350,20 @@ class OsmosisPlugin(CaajPlugin):
 
       tokenout_amount = Decimal.normalize(
           Decimal(tokenout_amount) * Decimal(10 ** 12))
+      caaj_main = {
+          "time": transaction.get_timestamp(),
+          "transaction_id": transaction.transaction_id,
+          "debit_title": "SPOT",
+          "debit_amount": {tokenout_name: str(tokenout_amount)},
+          "debit_from": recipient,
+          "debit_to": sender,
+          "credit_title": "Receive",
+          "credit_amount": {tokenin_name: str(tokenin_amount)},
+          "credit_from": sender,
+          "credit_to": recipient,
+          "comment": "osmosis transfer"
+      }
+      return caaj_main
 
     elif event_packetdata:
       sender = OsmosisPlugin.__get_attribute_list(
@@ -369,21 +383,21 @@ class OsmosisPlugin(CaajPlugin):
 
       tokenout_amount = Decimal.normalize(
           Decimal(tokenout_amount) * Decimal(10 ** 12))
-    caaj_main = {
-        "time": transaction.get_timestamp(),
-        "transaction_id": transaction.transaction_id,
-        "debit_title": "SPOT",
-        "debit_amount": {tokenout_name: str(tokenout_amount)},
-        "debit_from": recipient,
-        "debit_to": sender,
-        "credit_title": "Receive",
-        "credit_amount": {tokenin_name: str(tokenin_amount)},
-        "credit_from": sender,
-        "credit_to": recipient,
-        "comment": "osmosis transfer"
-    }
+      caaj_main = {
+          "time": transaction.get_timestamp(),
+          "transaction_id": transaction.transaction_id,
+          "debit_title": "SPOT",
+          "debit_amount": {tokenout_name: str(tokenout_amount)},
+          "debit_from": recipient,
+          "debit_to": sender,
+          "credit_title": "Receive",
+          "credit_amount": {tokenin_name: str(tokenin_amount)},
+          "credit_from": sender,
+          "credit_to": recipient,
+          "comment": "osmosis transfer"
+      }
 
-    return caaj_main
+      return caaj_main
 
   @ classmethod
   def __get_caaj_fee(cls, transaction: Transaction, user_address: str) -> CaajJournal:
