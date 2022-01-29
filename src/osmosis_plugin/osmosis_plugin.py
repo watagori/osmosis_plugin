@@ -1,5 +1,6 @@
 import re
 from decimal import Decimal
+from senkalib.chain.transaction import Transaction
 from senkalib.caaj_plugin import CaajPlugin
 from senkalib.caaj_journal import CaajJournal
 from src.osmosis_plugin.get_token_value import GetTokenValue
@@ -10,8 +11,10 @@ EXA = 10**18
 
 
 class OsmosisPlugin(CaajPlugin):
+  chian = "osmosis"
+
   @classmethod
-  def can_handle(cls, transaction) -> bool:
+  def can_handle(cls, transaction: Transaction) -> bool:
     chain_type = transaction.get_transaction()['header']['chain_id']
     if "osmosis" in chain_type:
       return True
@@ -19,7 +22,7 @@ class OsmosisPlugin(CaajPlugin):
       return False
 
   @classmethod
-  def get_caajs(cls, transaction) -> CaajJournal:
+  def get_caajs(cls, transaction: Transaction) -> CaajJournal:
     if transaction.get_transaction()['data']['code'] == 0:
       transaction_type = \
           transaction.get_transaction(
@@ -61,16 +64,16 @@ class OsmosisPlugin(CaajPlugin):
         return caaj_main
 
   @classmethod
-  def __get_caaj_swap(cls, transaction) -> CaajJournal:
-    # data from "type":""event_list"
-    event_list = OsmosisPlugin.__get_event_list(transaction, "token_swapped")
+  def __get_caaj_swap(cls, transaction: Transaction) -> CaajJournal:
+    # data from "type":""event_data"
+    event_data = OsmosisPlugin.__get_event_data(transaction, "token_swapped")
 
     user_address = OsmosisPlugin.__get_attribute_list(
-        event_list, "sender")[0]['value']
+        event_data, "sender")[0]['value']
     token_in = OsmosisPlugin.__get_attribute_list(
-        event_list, "tokens_in")[0]['value']
+        event_data, "tokens_in")[0]['value']
     token_out = OsmosisPlugin.__get_attribute_list(
-        event_list, "tokens_out")[0]['value']
+        event_data, "tokens_out")[0]['value']
 
     tokenin_amount = GetTokenValue.get_token_amount(token_in)
 
@@ -98,7 +101,7 @@ class OsmosisPlugin(CaajPlugin):
     return [caaj_main, caaj_fee]
 
   @ classmethod
-  def __get_caaj_fee(cls, transaction, user_address) -> dict:
+  def __get_caaj_fee(cls, transaction: Transaction, user_address: str) -> CaajJournal:
     caaj_fee = {
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
@@ -116,12 +119,12 @@ class OsmosisPlugin(CaajPlugin):
     return caaj_fee
 
   @ classmethod
-  def __get_caaj_join_pool(cls, transaction) -> CaajJournal:
-    event_list = OsmosisPlugin.__get_event_list(transaction, "transfer")
+  def __get_caaj_join_pool(cls, transaction: Transaction) -> CaajJournal:
+    event_data = OsmosisPlugin.__get_event_data(transaction, "transfer")
 
-    senders = OsmosisPlugin.__get_attribute_list(event_list, "sender")
-    recipients = OsmosisPlugin.__get_attribute_list(event_list, "recipient")
-    token_values = OsmosisPlugin.__get_attribute_list(event_list, "amount")
+    senders = OsmosisPlugin.__get_attribute_list(event_data, "sender")
+    recipients = OsmosisPlugin.__get_attribute_list(event_data, "recipient")
+    token_values = OsmosisPlugin.__get_attribute_list(event_data, "amount")
 
     user_address = senders[0]['value']
 
@@ -155,15 +158,15 @@ class OsmosisPlugin(CaajPlugin):
     return [caaj_main, caaj_fee]
 
   @ classmethod
-  def __get_caaj_start_farming(cls, transaction) -> CaajJournal:
-    event_list = OsmosisPlugin.__get_event_list(transaction, "transfer")
+  def __get_caaj_start_farming(cls, transaction: Transaction) -> CaajJournal:
+    event_data = OsmosisPlugin.__get_event_data(transaction, "transfer")
 
     user_address = OsmosisPlugin.__get_attribute_list(
-        event_list, "sender")[0]['value']
+        event_data, "sender")[0]['value']
     recipient = OsmosisPlugin.__get_attribute_list(
-        event_list, "recipient")[0]['value']
+        event_data, "recipient")[0]['value']
     token_value = OsmosisPlugin.__get_attribute_list(
-        event_list, "amount")[0]['value']
+        event_data, "amount")[0]['value']
 
     credit_amount = GetTokenValue.get_token_amount(token_value)
 
@@ -191,12 +194,12 @@ class OsmosisPlugin(CaajPlugin):
     return [caaj_main, caaj_fee]
 
   @ classmethod
-  def __get_caaj_exit_pool(cls, transaction) -> CaajJournal:
-    event_list = OsmosisPlugin.__get_event_list(transaction, "transfer")
+  def __get_caaj_exit_pool(cls, transaction: Transaction) -> CaajJournal:
+    event_data = OsmosisPlugin.__get_event_data(transaction, "transfer")
 
-    senders = OsmosisPlugin.__get_attribute_list(event_list, "sender")
-    recipients = OsmosisPlugin.__get_attribute_list(event_list, "recipient")
-    token_values = OsmosisPlugin.__get_attribute_list(event_list, "amount")
+    senders = OsmosisPlugin.__get_attribute_list(event_data, "sender")
+    recipients = OsmosisPlugin.__get_attribute_list(event_data, "recipient")
+    token_values = OsmosisPlugin.__get_attribute_list(event_data, "amount")
 
     user_address = senders[1]['value']
 
@@ -230,15 +233,15 @@ class OsmosisPlugin(CaajPlugin):
     return [caaj_main, caaj_fee]
 
   @ classmethod
-  def __get_caaj_ibc_transfer(cls, transaction) -> CaajJournal:
-    event_list = OsmosisPlugin.__get_event_list(transaction, "transfer")
+  def __get_caaj_ibc_transfer(cls, transaction: Transaction) -> CaajJournal:
+    event_data = OsmosisPlugin.__get_event_data(transaction, "transfer")
 
     sender = OsmosisPlugin.__get_attribute_list(
-        event_list, "sender")[0]['value']
+        event_data, "sender")[0]['value']
     recipient = OsmosisPlugin.__get_attribute_list(
-        event_list, "recipient")[0]['value']
+        event_data, "recipient")[0]['value']
     amount = OsmosisPlugin.__get_attribute_list(
-        event_list, "amount")[0]['value']
+        event_data, "amount")[0]['value']
 
     tokenin_amount = GetTokenValue.get_token_amount(amount)
 
@@ -267,15 +270,15 @@ class OsmosisPlugin(CaajPlugin):
     return [caaj_main, caaj_fee]
 
   @ classmethod
-  def __get_caaj_send(cls, transaction) -> CaajJournal:
-    event_list = OsmosisPlugin.__get_event_list(transaction, "transfer")
+  def __get_caaj_send(cls, transaction: Transaction) -> CaajJournal:
+    event_data = OsmosisPlugin.__get_event_data(transaction, "transfer")
 
     sender = OsmosisPlugin.__get_attribute_list(
-        event_list, "sender")[0]['value']
+        event_data, "sender")[0]['value']
     recipient = OsmosisPlugin.__get_attribute_list(
-        event_list, "recipient")[0]['value']
+        event_data, "recipient")[0]['value']
     amount = OsmosisPlugin.__get_attribute_list(
-        event_list, "amount")[0]['value']
+        event_data, "amount")[0]['value']
 
     tokenin_amount = Decimal(
         re.search(r'\d+', amount).group()) / Decimal(EXA)
@@ -305,22 +308,22 @@ class OsmosisPlugin(CaajPlugin):
     return [caaj_main, caaj_fee]
 
   @ classmethod
-  def __get_caaj_begin_unlocking(cls, transaction):
+  def __get_caaj_begin_unlocking(cls, transaction: Transaction) -> CaajJournal:
     owner = transaction["tx"]["body"]["messages"][0]["owner"]
     caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, owner)
 
     return[caaj_fee]
 
   @ classmethod
-  def __get_caaj_join_swap_extern_amount_in(cls, transaction):
-    event_list = OsmosisPlugin.__get_event_list(transaction, "transfer")
+  def __get_caaj_join_swap_extern_amount_in(cls, transaction: Transaction) -> CaajJournal:
+    event_data = OsmosisPlugin.__get_event_data(transaction, "transfer")
 
     sender = OsmosisPlugin.__get_attribute_list(
-        event_list, "sender")[0]['value']
+        event_data, "sender")[0]['value']
     recipient = OsmosisPlugin.__get_attribute_list(
-        event_list, "recipient")[0]['value']
+        event_data, "recipient")[0]['value']
     amount = OsmosisPlugin.__get_attribute_list(
-        event_list, "amount")[0]['value']
+        event_data, "amount")[0]['value']
 
     tokenin_amount = Decimal(
         re.search(r'\d+', amount).group()) / Decimal(EXA)
@@ -350,16 +353,16 @@ class OsmosisPlugin(CaajPlugin):
     return [caaj_main, caaj_fee]
 
   @ classmethod
-  def __get_event_list(cls, transaction, event_type):
-    event_list = list(filter(
+  def __get_event_data(cls, transaction: Transaction, event_type: str) -> dict:
+    event_data = list(filter(
         lambda event: event['type'] == event_type, transaction.get_transaction(
         )['data']['logs'][0]['events']))[-1]
 
-    return event_list
+    return event_data
 
   @ classmethod
-  def __get_attribute_list(cls, event_list, attribute_key):
+  def __get_attribute_list(cls, event_data: dict, attribute_key: str) -> list:
     attribute_list = list(filter(
-        lambda attribute: attribute['key'] == attribute_key, event_list['attributes']))
+        lambda attribute: attribute['key'] == attribute_key, event_data['attributes']))
 
     return attribute_list
