@@ -128,6 +128,17 @@ class TestOsmosisPlugin():
     assert caajs[0]['credit_from'] == caaj_main_model['credit_from']
     assert caajs[0]['credit_to'] == caaj_main_model['credit_to']
 
+  def test_get_caajs_05(self):
+    test_data = TestOsmosisPlugin.__get_test_data("ibc_received")
+    transaction = OsmosisTransaction(test_data)
+    caajs = OsmosisPlugin.get_caajs(transaction)
+    caaj_main_model = {
+        "debit_title": "SPOT",
+        "credit_title": "Received",
+
+    }
+    assert caajs[0]['debit_title'] == caaj_main_model["debit_title"]
+
   @classmethod
   def __get_test_data(cls, filename):
     with open(f"tests/data/{filename}.json", encoding="utf-8") as jsonfile_local:
