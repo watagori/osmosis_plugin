@@ -68,35 +68,39 @@ class OsmosisPlugin(CaajPlugin):
 
   @classmethod
   def __get_caaj_swap(cls, transaction: Transaction) -> CaajJournal:
-    # data from "type":""event_data"
-    event_data = OsmosisPlugin.__get_event_data(transaction, "token_swapped")
+    event_data = OsmosisPlugin.__get_event_data(transaction, "transfer")
 
-    user_address = OsmosisPlugin.__get_attribute_list(
-        event_data, "sender")[0]['value']
-    token_in = OsmosisPlugin.__get_attribute_list(
-        event_data, "tokens_in")[0]['value']
-    token_out = OsmosisPlugin.__get_attribute_list(
-        event_data, "tokens_out")[0]['value']
+    sender = OsmosisPlugin.__get_attribute_list(
+        event_data, "sender")
+    recipient = OsmosisPlugin.__get_attribute_list(
+        event_data, "recipient")
+    amount = OsmosisPlugin.__get_attribute_list(
+        event_data, "amount")
 
-    tokenin_amount = OsmosisPlugin.__get_token_amount(token_in)
+    credit_to = recipient[0]['value']
+    credit_from = sender[0]['value']
+    credit_token_amount = str(
+        OsmosisPlugin.__get_token_amount(amount[0]['value']))
+    credit_token_name = OsmosisPlugin.__get_token_name(amount[0]['value'])
 
-    tokenout_amount = OsmosisPlugin.__get_token_amount(token_out)
-
-    tokenin_name = OsmosisPlugin.__get_token_name(token_in)
-    tokenout_name = OsmosisPlugin.__get_token_name(token_out)
+    debit_to = recipient[1]['value']
+    debit_from = sender[1]['value']
+    debit_token_amount = str(
+        OsmosisPlugin.__get_token_amount(amount[1]['value']))
+    debit_token_name = OsmosisPlugin.__get_token_name(amount[1]['value'])
 
     caaj_main = {
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
         "debit_title": "SPOT",
-        "debit_amount": {tokenout_name: tokenout_amount},
-        "debit_from": user_address,
-        "debit_to": user_address,
+        "debit_amount": {debit_token_name: debit_token_amount},
+        "debit_from": debit_from,
+        "debit_to": debit_to,
         "credit_title": "SPOT",
-        "credit_amount": {tokenin_name: tokenin_amount},
-        "credit_from": user_address,
-        "credit_to": user_address,
-        "comment": "osmosis swap"
+        "credit_amount": {credit_token_name: credit_token_amount},
+        "credit_from": credit_from,
+        "credit_to": credit_to,
+        "comment": "osmosis transfer"
     }
 
     return caaj_main
