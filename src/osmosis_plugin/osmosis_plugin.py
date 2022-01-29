@@ -340,6 +340,16 @@ class OsmosisPlugin(CaajPlugin):
           event_transfer[0][0], "recipient")[0]['value']
       amount = OsmosisPlugin.__get_attribute_list(
           event_transfer[0][0], "amount")[0]['value']
+      tokenin_amount = OsmosisPlugin.__get_token_amount(amount)
+
+      tokenout_amount = Decimal(
+          re.search(r'\d+', amount).group()) / Decimal(EXA)
+
+      tokenin_name = amount[re.search(r'\d+', amount).end():]
+      tokenout_name = amount[re.search(r'\d+', amount).end():]
+
+      tokenout_amount = Decimal.normalize(
+          Decimal(tokenout_amount) * Decimal(10 ** 12))
 
     elif event_packetdata:
       sender = OsmosisPlugin.__get_attribute_list(
@@ -349,16 +359,16 @@ class OsmosisPlugin(CaajPlugin):
       amount = OsmosisPlugin.__get_attribute_list(
           event_packetdata[0][0], "amount")[0]['value']
 
-    tokenin_amount = OsmosisPlugin.__get_token_amount(amount)
+      tokenin_amount = OsmosisPlugin.__get_token_amount(amount)
 
-    tokenout_amount = Decimal(
-        re.search(r'\d+', amount).group()) / Decimal(EXA)
+      tokenout_amount = Decimal(
+          re.search(r'\d+', amount).group()) / Decimal(EXA)
 
-    tokenin_name = amount[re.search(r'\d+', amount).end():]
-    tokenout_name = amount[re.search(r'\d+', amount).end():]
+      tokenin_name = amount[re.search(r'\d+', amount).end():]
+      tokenout_name = amount[re.search(r'\d+', amount).end():]
 
-    tokenout_amount = Decimal.normalize(
-        Decimal(tokenout_amount) * Decimal(10 ** 12))
+      tokenout_amount = Decimal.normalize(
+          Decimal(tokenout_amount) * Decimal(10 ** 12))
     caaj_main = {
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
