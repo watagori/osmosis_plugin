@@ -10,7 +10,7 @@ EXA = 10**18
 
 
 class OsmosisPlugin(CaajPlugin):
-  chian = "osmosis"
+  chain = "osmosis"
 
   @classmethod
   def can_handle(cls, transaction: Transaction) -> bool:
