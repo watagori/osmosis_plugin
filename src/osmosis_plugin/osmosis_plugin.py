@@ -54,6 +54,9 @@ class OsmosisPlugin(CaajPlugin):
       elif transaction_type == "MsgUpdateClient":
         caaj_main = OsmosisPlugin.__get_caaj_ibc_received(transaction)
 
+      else:
+        caaj_main = []
+
       if transaction.get_transaction_fee != 0:
         caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
         return [caaj_main, caaj_fee]
