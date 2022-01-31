@@ -27,7 +27,7 @@ class OsmosisPlugin(CaajPlugin):
           transaction.get_transaction(
           )['data']['tx']['body']['messages'][0]['@type'].split('.')[-1]
 
-      if transaction_type in ["MsgSwapExactAmountIn", "MsgJoinSwapExternAmountIn"]:
+      if transaction_type in ["MsgSwapExactAmountIn", "MsgJoinSwapExternAmountIn", "MsgUndelegate"]:
         caaj_main = OsmosisPlugin.__get_caaj_swap(transaction)
 
       elif transaction_type in ["MsgLockTokens", "MsgTransfer", "MsgSend"]:
@@ -42,7 +42,10 @@ class OsmosisPlugin(CaajPlugin):
       elif transaction_type == "MsgUpdateClient":
         caaj_main = OsmosisPlugin.__get_caaj_ibc_received(transaction)
 
-      elif transaction_type == "MsgBeginUnlocking":
+      elif transaction_type == "MsgDelegate":
+        caaj_main = OsmosisPlugin.__get_caaj_delegate(transaction, address)
+
+      elif transaction_type in ["MsgBeginUnlocking", "MsgWithdrawDelegatorReward", "MsgVote", 'MsgUnlockPeriodLock', "MsgBeginRedelegate"]:
         caaj_main = []
 
       if transaction.get_transaction_fee() != "0" and caaj_main:
@@ -203,6 +206,44 @@ class OsmosisPlugin(CaajPlugin):
         "time": transaction.get_timestamp(),
         "transaction_id": transaction.transaction_id,
         "debit_title": "SEND",
+        "debit_amount": {debit_name: debit_amount},
+        "debit_from": debit_from,
+        "debit_to": debit_to,
+        "credit_title": "SPOT",
+        "credit_amount": {credit_name: credit_amount},
+        "credit_from": credit_from,
+        "credit_to": credit_to,
+        "comment": "send"
+    }
+
+    return caaj_main
+
+  @ classmethod
+  def __get_caaj_delegate(cls, transaction: Transaction, user_address: str) -> CaajJournal:
+    event_data = OsmosisPlugin.__get_event_data(transaction, "delegate")
+
+    recipients = OsmosisPlugin.__get_attribute_data(
+        event_data, "validator"),
+    amounts = OsmosisPlugin.__get_attribute_data(
+        event_data, "amount")
+
+    credit_from = user_address
+    credit_to = recipients[0][0]['value']
+    debit_to = user_address
+    debit_from = recipients[0][0]['value']
+
+    credit_amount = str(
+        OsmosisPlugin.__get_token_amount(amounts[0]['value']))
+    debit_amount = str(
+        OsmosisPlugin.__get_token_amount(amounts[0]['value']))
+
+    credit_name = OsmosisPlugin.__get_token_name(amounts[0]['value'])
+    debit_name = OsmosisPlugin.__get_token_name(amounts[0]['value'])
+
+    caaj_main = {
+        "time": transaction.get_timestamp(),
+        "transaction_id": transaction.transaction_id,
+        "debit_title": "DELEGATE",
         "debit_amount": {debit_name: debit_amount},
         "debit_from": debit_from,
         "debit_to": debit_to,
