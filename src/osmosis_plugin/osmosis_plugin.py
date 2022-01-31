@@ -76,26 +76,26 @@ class OsmosisPlugin(CaajPlugin):
     credit_token_amount = str(
         OsmosisPlugin.__get_token_amount(amount[0]['value']))
     credit_token_name = OsmosisPlugin.__get_token_name(amount[0]['value'])
+    credit_amount = {credit_token_name: credit_token_amount}
 
     debit_to = recipient[1]['value']
     debit_from = sender[1]['value']
     debit_token_amount = str(
         OsmosisPlugin.__get_token_amount(amount[1]['value']))
     debit_token_name = OsmosisPlugin.__get_token_name(amount[1]['value'])
+    debit_amount = {debit_token_name: debit_token_amount}
 
-    caaj_main = {
-        "time": transaction.get_timestamp(),
-        "transaction_id": transaction.transaction_id,
-        "debit_title": "SPOT",
-        "debit_amount": {debit_token_name: debit_token_amount},
-        "debit_from": debit_from,
-        "debit_to": debit_to,
-        "credit_title": "SPOT",
-        "credit_amount": {credit_token_name: credit_token_amount},
-        "credit_from": credit_from,
-        "credit_to": credit_to,
-        "comment": "swap"
-    }
+    debit_title = "SPOT"
+    credit_title = "SPOT"
+
+    caaj_meta = CaajJournal.get_caaj_meta(
+        transaction.get_timestamp(), transaction.get_transaction_id, "osmosis swap")
+    caaj_destination = CaajJournal.get_caaj_destination(
+        debit_from, debit_to, credit_from, credit_to)
+    caaj_value = CaajJournal.get_caaj_value(
+        debit_title, debit_amount, credit_title, credit_amount)
+
+    caaj_main = dict(**caaj_meta, **caaj_destination, **caaj_value)
 
     return caaj_main
 
@@ -116,24 +116,24 @@ class OsmosisPlugin(CaajPlugin):
     credit_amount_1 = str(OsmosisPlugin.__get_token_amount(credit_amounts[1]))
     credit_name_0 = OsmosisPlugin.__get_token_name(credit_amounts[0])
     credit_name_1 = OsmosisPlugin.__get_token_name(credit_amounts[1])
+    credit_amount = {credit_name_0: credit_amount_0,
+                     credit_name_1: credit_amount_1}
 
-    debit_name = OsmosisPlugin.__get_token_name(amounts[1]['value'])
-    debit_amount = str(
-        OsmosisPlugin.__get_token_amount(amounts[1]['value']))
+    debit_amount = {OsmosisPlugin.__get_token_name(amounts[1]['value']):
+                    str(OsmosisPlugin.__get_token_amount(amounts[1]['value']))}
 
-    caaj_main = {
-        "time": transaction.get_timestamp(),
-        "transaction_id": transaction.transaction_id,
-        "debit_title": "LIQUIDITY",
-        "debit_amount": {debit_name: debit_amount},
-        "debit_from": debit_from,
-        "debit_to": debit_to,
-        "credit_title": "SPOT",
-        "credit_amount": {credit_name_0: credit_amount_0, credit_name_1: credit_amount_1},
-        "credit_from": credit_from,
-        "credit_to": credit_to,
-        "comment": "osmosis liquidity add"
-    }
+    debit_title = "LIQUIDITY"
+    credit_title = "SPOT"
+
+    caaj_meta = CaajJournal.get_caaj_meta(
+        transaction.get_timestamp(), transaction.get_transaction_id, "osmosis add liquidity")
+
+    caaj_destination = CaajJournal.get_caaj_destination(
+        debit_from, debit_to, credit_from, credit_to)
+    caaj_value = CaajJournal.get_caaj_value(
+        debit_title, debit_amount, credit_title, credit_amount)
+
+    caaj_main = dict(**caaj_meta, **caaj_destination, **caaj_value)
 
     return caaj_main
 
@@ -161,19 +161,21 @@ class OsmosisPlugin(CaajPlugin):
     debit_name_1 = OsmosisPlugin.__get_token_name(debit_amounts[1])
     credit_name = OsmosisPlugin.__get_token_name(amounts[1]['value'])
 
-    caaj_main = {
-        "time": transaction.get_timestamp(),
-        "transaction_id": transaction.transaction_id,
-        "debit_title": "SPOT",
-        "debit_amount":  {debit_name_0: debit_amount_0, debit_name_1: debit_amount_1},
-        "debit_from": debit_from,
-        "debit_to": debit_to,
-        "credit_title": "LIQUIDITY",
-        "credit_amount": {credit_name: credit_amount},
-        "credit_from": credit_from,
-        "credit_to": credit_to,
-        "comment": "osmosis liquidity remove"
-    }
+    debit_amount = {debit_name_0: debit_amount_0, debit_name_1: debit_amount_1}
+    credit_amount = {credit_name: credit_amount}
+
+    debit_title = "SPOT"
+    credit_title = "LIQUIDITY"
+
+    caaj_meta = CaajJournal.get_caaj_meta(
+        transaction.get_timestamp(), transaction.get_transaction_id, "osmosis remove liquidity")
+
+    caaj_destination = CaajJournal.get_caaj_destination(
+        debit_from, debit_to, credit_from, credit_to)
+    caaj_value = CaajJournal.get_caaj_value(
+        debit_title, debit_amount, credit_title, credit_amount)
+
+    caaj_main = dict(**caaj_meta, **caaj_destination, **caaj_value)
 
     return caaj_main
 
@@ -189,34 +191,33 @@ class OsmosisPlugin(CaajPlugin):
     debit_to = senders[0]['value']
     debit_from = recipients[0]['value']
 
-    credit_amount = str(
-        OsmosisPlugin.__get_token_amount(amounts[0]['value']))
-    debit_amount = str(
-        OsmosisPlugin.__get_token_amount(amounts[0]['value']))
-
     credit_name = OsmosisPlugin.__get_token_name(amounts[0]['value'])
     debit_name = OsmosisPlugin.__get_token_name(amounts[0]['value'])
 
-    caaj_main = {
-        "time": transaction.get_timestamp(),
-        "transaction_id": transaction.transaction_id,
-        "debit_title": "SEND",
-        "debit_amount": {debit_name: debit_amount},
-        "debit_from": debit_from,
-        "debit_to": debit_to,
-        "credit_title": "SPOT",
-        "credit_amount": {credit_name: credit_amount},
-        "credit_from": credit_from,
-        "credit_to": credit_to,
-        "comment": "send"
-    }
+    credit_amount = {credit_name: str(
+        OsmosisPlugin.__get_token_amount(amounts[0]['value']))}
+
+    debit_amount = {debit_name: str(
+        OsmosisPlugin.__get_token_amount(amounts[0]['value']))}
+
+    debit_title = "SPOT"
+    credit_title = "LIQUIDITY"
+
+    caaj_meta = CaajJournal.get_caaj_meta(
+        transaction.get_timestamp(), transaction.get_transaction_id, "osmosis remove liquidity")
+
+    caaj_destination = CaajJournal.get_caaj_destination(
+        debit_from, debit_to, credit_from, credit_to)
+    caaj_value = CaajJournal.get_caaj_value(
+        debit_title, debit_amount, credit_title, credit_amount)
+
+    caaj_main = dict(**caaj_meta, **caaj_destination, **caaj_value)
 
     return caaj_main
 
   @ classmethod
   def __get_caaj_delegate(cls, transaction: Transaction, user_address: str) -> CaajJournal:
     event_data = OsmosisPlugin.__get_event_data(transaction, "delegate")
-
     recipients = OsmosisPlugin.__get_attribute_data(
         event_data, "validator"),
     amounts = OsmosisPlugin.__get_attribute_data(
@@ -227,31 +228,26 @@ class OsmosisPlugin(CaajPlugin):
     debit_to = user_address
     debit_from = recipients[0][0]['value']
 
-    credit_amount = str(
-        OsmosisPlugin.__get_token_amount(amounts[0]['value']))
-    debit_amount = str(
-        OsmosisPlugin.__get_token_amount(amounts[0]['value']))
+    credit_amount = {OsmosisPlugin.__get_token_name(amounts[0]['value']): str(
+        OsmosisPlugin.__get_token_amount(amounts[0]['value']))}
+    debit_amount = {OsmosisPlugin.__get_token_name(amounts[0]['value']): str(
+        OsmosisPlugin.__get_token_amount(amounts[0]['value']))}
 
-    credit_name = OsmosisPlugin.__get_token_name(amounts[0]['value'])
-    debit_name = OsmosisPlugin.__get_token_name(amounts[0]['value'])
+    debit_title = "DELEGATE"
+    credit_title = "SPOT"
 
-    caaj_main = {
-        "time": transaction.get_timestamp(),
-        "transaction_id": transaction.transaction_id,
-        "debit_title": "DELEGATE",
-        "debit_amount": {debit_name: debit_amount},
-        "debit_from": debit_from,
-        "debit_to": debit_to,
-        "credit_title": "SPOT",
-        "credit_amount": {credit_name: credit_amount},
-        "credit_from": credit_from,
-        "credit_to": credit_to,
-        "comment": "send"
-    }
+    caaj_meta = CaajJournal.get_caaj_meta(
+        transaction.get_timestamp(), transaction.get_transaction_id, "osmosis remove liquidity")
+    caaj_destination = CaajJournal.get_caaj_destination(
+        debit_from, debit_to, credit_from, credit_to)
+    caaj_value = CaajJournal.get_caaj_value(
+        debit_title, debit_amount, credit_title, credit_amount)
+
+    caaj_main = dict(**caaj_meta, **caaj_destination, **caaj_value)
 
     return caaj_main
 
-  @classmethod
+  @ classmethod
   def __get_caaj_ibc_received(cls, transaction: Transaction) -> CaajJournal:
     event_transfer = []
     event_packetdata = []
@@ -339,21 +335,27 @@ class OsmosisPlugin(CaajPlugin):
 
   @ classmethod
   def __get_caaj_fee(cls, transaction: Transaction, user_address: str) -> CaajJournal:
-    caaj_fee = {
-        "time": transaction.get_timestamp(),
-        "transaction_id": transaction.transaction_id,
-        "debit_title": "FEE",
-        "debit_amount": {"OSMO": str(transaction.get_transaction_fee() / Decimal(MEGA))},
-        "debit_from": "0x0000000000000000000000000000000000000000",
-        "debit_to": user_address,
-        "credit_title": "SPOT",
-        "credit_amount": {"OSMO": str(transaction.get_transaction_fee() / Decimal(MEGA))},
-        "credit_from": user_address,
-        "credit_to": "0x0000000000000000000000000000000000000000",
-        "comment": "osmosis transactino fee"
-    }
+    debit_from = "0x0000000000000000000000000000000000000000"
+    debit_to = user_address
+    credit_from = user_address
+    credit_to = "0x0000000000000000000000000000000000000000"
 
-    return caaj_fee
+    debit_title = "FEE"
+    credit_title = "SPOT"
+
+    amount = {"OSMO": str(
+        transaction.get_transaction_fee() / Decimal(MEGA))}
+
+    caaj_meta = CaajJournal.get_caaj_meta(
+        transaction.get_timestamp(), transaction.get_transaction_id, "osmosis transaction fee")
+    caaj_destination = CaajJournal.get_caaj_destination(
+        debit_from, debit_to, credit_from, credit_to)
+    caaj_value = CaajJournal.get_caaj_value(
+        debit_title, amount, credit_title, amount)
+
+    caaj_main = dict(**caaj_meta, **caaj_destination, **caaj_value)
+
+    return caaj_main
 
   @ classmethod
   def __get_event_data(cls, transaction: Transaction, event_type: str) -> dict:
@@ -370,7 +372,7 @@ class OsmosisPlugin(CaajPlugin):
 
     return attribute_data
 
-  @classmethod
+  @ classmethod
   def __get_token_name(cls, value: str) -> str:
     token_name = value[re.search(r'\d+', value).end():]
     if token_name == "uosmo":
@@ -380,7 +382,7 @@ class OsmosisPlugin(CaajPlugin):
 
     return token_name
 
-  @classmethod
+  @ classmethod
   def __get_token_amount(cls, value: str) -> int:
 
     if "pool" in value:
@@ -392,7 +394,7 @@ class OsmosisPlugin(CaajPlugin):
           re.search(r'\d+', value).group()) / Decimal(MEGA))
     return token_amount
 
-  @classmethod
+  @ classmethod
   def __get_attribute_list(cls, transaction: Transaction) -> dict:
     event_data = OsmosisPlugin.__get_event_data(transaction, "transfer")
 
