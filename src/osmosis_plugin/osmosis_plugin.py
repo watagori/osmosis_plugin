@@ -371,7 +371,7 @@ class OsmosisPlugin(CaajPlugin):
     return attribute_data
 
   @classmethod
-  def __get_token_name(cls, value) -> str:
+  def __get_token_name(cls, value: str) -> str:
     token_name = value[re.search(r'\d+', value).end():]
     if token_name == "uosmo":
       token_name = "osmo"
@@ -381,7 +381,7 @@ class OsmosisPlugin(CaajPlugin):
     return token_name
 
   @classmethod
-  def __get_token_amount(cls, value) -> int:
+  def __get_token_amount(cls, value: str) -> int:
 
     if "pool" in value:
       token_amount = str(Decimal(
