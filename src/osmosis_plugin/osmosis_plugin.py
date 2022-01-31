@@ -43,14 +43,14 @@ class OsmosisPlugin(CaajPlugin):
         caaj_main = OsmosisPlugin.__get_caaj_ibc_received(transaction)
 
       elif transaction_type == "MsgBeginUnlocking":
-        pass
+        caaj_main = []
 
       if transaction.get_transaction_fee() != "0" and caaj_main:
         caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
         print("transaction.get_transaction_fee() !=0 and caaj_main:")
         return [caaj_main, caaj_fee]
 
-      elif transaction.get_transaction_fee() != "0" and caaj_main is None:
+      elif transaction.get_transaction_fee() != "0" and caaj_main == []:
         print("transaction.get_transaction_fee() != 0 and caaj_main:")
 
         caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
