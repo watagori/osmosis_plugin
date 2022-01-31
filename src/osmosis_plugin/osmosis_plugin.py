@@ -228,9 +228,9 @@ class OsmosisPlugin(CaajPlugin):
     debit_to = user_address
     debit_from = recipients[0][0]['value']
 
-    credit_amount = {OsmosisPlugin.__get_token_name(amounts[0]['value']): str(
+    credit_amount = {"osmo": str(
         OsmosisPlugin.__get_token_amount(amounts[0]['value']))}
-    debit_amount = {OsmosisPlugin.__get_token_name(amounts[0]['value']): str(
+    debit_amount = {"osmo": str(
         OsmosisPlugin.__get_token_amount(amounts[0]['value']))}
 
     debit_title = "DELEGATE"
@@ -375,7 +375,7 @@ class OsmosisPlugin(CaajPlugin):
   @ classmethod
   def __get_token_name(cls, value: str) -> str:
     token_name = value[re.search(r'\d+', value).end():]
-    if token_name == "uosmo":
+    if token_name == "uosmo" or token_name == '':
       token_name = "osmo"
     elif token_name == "uion":
       token_name = "ion"
