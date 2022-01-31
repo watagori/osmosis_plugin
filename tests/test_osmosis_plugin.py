@@ -32,7 +32,7 @@ class TestOsmosisPlugin():
         "credit_amount": {"OSMO": "0.000629"},
         "credit_from": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         "credit_to": "0x0000000000000000000000000000000000000000",
-        "comment": "osmosis transactino fee"
+        "comment": "osmosis transaction fee"
     }
 
     assert caajs[1] == caaj_fee_model

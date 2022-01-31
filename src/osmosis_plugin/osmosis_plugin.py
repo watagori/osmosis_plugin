@@ -89,7 +89,7 @@ class OsmosisPlugin(CaajPlugin):
     credit_title = "SPOT"
 
     caaj_meta = CaajJournal.get_caaj_meta(
-        transaction.get_timestamp(), transaction.get_transaction_id, "osmosis swap")
+        transaction.get_timestamp(), transaction.transaction_id, "osmosis swap")
     caaj_destination = CaajJournal.get_caaj_destination(
         debit_from, debit_to, credit_from, credit_to)
     caaj_value = CaajJournal.get_caaj_value(
@@ -126,7 +126,7 @@ class OsmosisPlugin(CaajPlugin):
     credit_title = "SPOT"
 
     caaj_meta = CaajJournal.get_caaj_meta(
-        transaction.get_timestamp(), transaction.get_transaction_id, "osmosis add liquidity")
+        transaction.get_timestamp(), transaction.transaction_id, "osmosis add liquidity")
 
     caaj_destination = CaajJournal.get_caaj_destination(
         debit_from, debit_to, credit_from, credit_to)
@@ -168,7 +168,7 @@ class OsmosisPlugin(CaajPlugin):
     credit_title = "LIQUIDITY"
 
     caaj_meta = CaajJournal.get_caaj_meta(
-        transaction.get_timestamp(), transaction.get_transaction_id, "osmosis remove liquidity")
+        transaction.get_timestamp(), transaction.transaction_id, "osmosis remove liquidity")
 
     caaj_destination = CaajJournal.get_caaj_destination(
         debit_from, debit_to, credit_from, credit_to)
@@ -204,7 +204,7 @@ class OsmosisPlugin(CaajPlugin):
     credit_title = "LIQUIDITY"
 
     caaj_meta = CaajJournal.get_caaj_meta(
-        transaction.get_timestamp(), transaction.get_transaction_id, "osmosis remove liquidity")
+        transaction.get_timestamp(), transaction.transaction_id, "osmosis remove liquidity")
 
     caaj_destination = CaajJournal.get_caaj_destination(
         debit_from, debit_to, credit_from, credit_to)
@@ -237,7 +237,7 @@ class OsmosisPlugin(CaajPlugin):
     credit_title = "SPOT"
 
     caaj_meta = CaajJournal.get_caaj_meta(
-        transaction.get_timestamp(), transaction.get_transaction_id, "osmosis remove liquidity")
+        transaction.get_timestamp(), transaction.transaction_id, "osmosis remove liquidity")
     caaj_destination = CaajJournal.get_caaj_destination(
         debit_from, debit_to, credit_from, credit_to)
     caaj_value = CaajJournal.get_caaj_value(
@@ -347,7 +347,7 @@ class OsmosisPlugin(CaajPlugin):
         transaction.get_transaction_fee() / Decimal(MEGA))}
 
     caaj_meta = CaajJournal.get_caaj_meta(
-        transaction.get_timestamp(), transaction.get_transaction_id, "osmosis transaction fee")
+        transaction.get_timestamp(), transaction.transaction_id, "osmosis transaction fee")
     caaj_destination = CaajJournal.get_caaj_destination(
         debit_from, debit_to, credit_from, credit_to)
     caaj_value = CaajJournal.get_caaj_value(
