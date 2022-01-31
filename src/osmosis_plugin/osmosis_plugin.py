@@ -50,18 +50,13 @@ class OsmosisPlugin(CaajPlugin):
 
       if transaction.get_transaction_fee() != "0" and caaj_main:
         caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
-        print("transaction.get_transaction_fee() !=0 and caaj_main:")
         return [caaj_main, caaj_fee]
 
       elif transaction.get_transaction_fee() != "0" and caaj_main == []:
-        print("transaction.get_transaction_fee() != 0 and caaj_main:")
-
         caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
         return [caaj_fee]
 
       elif transaction.get_transaction_fee() == "0" and caaj_main:
-        print("transaction.get_transaction_fee() != 0 and caaj_main:")
-
         return [caaj_main]
 
       else:
