@@ -4,13 +4,13 @@ from osmosis_plugin.osmosis_plugin import OsmosisPlugin
 
 
 class TestOsmosisPlugin():
-  def test_can_handle_00(self):
+  def test_can_handle_ibc_received(self):
     test_data = TestOsmosisPlugin.__get_test_data("ibc_received")
     transaction = OsmosisTransaction(test_data)
     chain_type = OsmosisPlugin.can_handle(transaction)
     assert chain_type
 
-  def test_can_handle_01(self):
+  def test_can_handle_cosmos_transfer(self):
     test_data = TestOsmosisPlugin.__get_test_data("cosmos_transfer")
     transaction = OsmosisTransaction(test_data)
     chain_type = OsmosisPlugin.can_handle(transaction)
@@ -37,7 +37,7 @@ class TestOsmosisPlugin():
 
     assert caajs[1] == caaj_fee_model
 
-  def test_get_caajs_01(self):
+  def test_get_caajs_swap(self):
     test_data = TestOsmosisPlugin.__get_test_data("swap")
     transaction = OsmosisTransaction(test_data)
     caajs = OsmosisPlugin.get_caajs(
@@ -61,7 +61,7 @@ class TestOsmosisPlugin():
     assert caajs[0]['credit_from'] == caaj_main_model['credit_from']
     assert caajs[0]['credit_to'] == caaj_main_model['credit_to']
 
-  def test_get_caajs_02(self):
+  def test_get_caajs_join_pool(self):
     test_data = TestOsmosisPlugin.__get_test_data("join_pool")
     transaction = OsmosisTransaction(test_data)
     caajs = OsmosisPlugin.get_caajs(
@@ -86,7 +86,7 @@ class TestOsmosisPlugin():
     assert caajs[0]['credit_from'] == caaj_main_model['credit_from']
     assert caajs[0]['credit_to'] == caaj_main_model['credit_to']
 
-  def test_get_caajs_03(self):
+  def test_get_caajs_start_farming(self):
     test_data = TestOsmosisPlugin.__get_test_data("start_farming")
     transaction = OsmosisTransaction(test_data)
     caajs = OsmosisPlugin.get_caajs(
@@ -109,7 +109,7 @@ class TestOsmosisPlugin():
     assert caajs[0]['credit_from'] == caaj_main_model['credit_from']
     assert caajs[0]['credit_to'] == caaj_main_model['credit_to']
 
-  def test_get_caajs_04(self):
+  def test_get_caajs_exit_pool(self):
     test_data = TestOsmosisPlugin.__get_test_data("exit_pool")
     transaction = OsmosisTransaction(test_data)
     caajs = OsmosisPlugin.get_caajs(
@@ -133,7 +133,7 @@ class TestOsmosisPlugin():
     assert caajs[0]['credit_from'] == caaj_main_model['credit_from']
     assert caajs[0]['credit_to'] == caaj_main_model['credit_to']
 
-  def test_get_caajs_05(self):
+  def test_get_caajs_ibc_received(self):
     test_data = TestOsmosisPlugin.__get_test_data("ibc_received")
     transaction = OsmosisTransaction(test_data)
     caajs = OsmosisPlugin.get_caajs(
