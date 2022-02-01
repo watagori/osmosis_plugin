@@ -32,12 +32,18 @@
                 "key": "receiver",
                 "value": "osmo1c9y7crgg6y9pfkq0y8mqzknqz84c3etr0kpcvj"
               },
-              { "key": "amount", "value": "4323192512586978gamm/pool/497" },
+              {
+                "key": "amount",
+                "value": "4323192512586978gamm/pool/497"
+              },
               {
                 "key": "receiver",
                 "value": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m"
               },
-              { "key": "amount", "value": "4323192512586978gamm/pool/497" }
+              {
+                "key": "amount",
+                "value": "4323192512586978gamm/pool/497"
+              }
             ]
           },
           {
@@ -55,7 +61,10 @@
                 "key": "spender",
                 "value": "osmo1c9y7crgg6y9pfkq0y8mqzknqz84c3etr0kpcvj"
               },
-              { "key": "amount", "value": "4323192512586978gamm/pool/497" }
+              {
+                "key": "amount",
+                "value": "4323192512586978gamm/pool/497"
+              }
             ]
           },
           {
@@ -65,13 +74,19 @@
                 "key": "minter",
                 "value": "osmo1c9y7crgg6y9pfkq0y8mqzknqz84c3etr0kpcvj"
               },
-              { "key": "amount", "value": "4323192512586978gamm/pool/497" }
+              {
+                "key": "amount",
+                "value": "4323192512586978gamm/pool/497"
+              }
             ]
           },
           {
             "type": "message",
             "attributes": [
-              { "key": "action", "value": "/osmosis.gamm.v1beta1.MsgJoinPool" },
+              {
+                "key": "action",
+                "value": "/osmosis.gamm.v1beta1.MsgJoinPool"
+              },
               {
                 "key": "sender",
                 "value": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m"
@@ -80,7 +95,10 @@
                 "key": "sender",
                 "value": "osmo1c9y7crgg6y9pfkq0y8mqzknqz84c3etr0kpcvj"
               },
-              { "key": "module", "value": "gamm" },
+              {
+                "key": "module",
+                "value": "gamm"
+              },
               {
                 "key": "sender",
                 "value": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m"
@@ -90,17 +108,26 @@
           {
             "type": "pool_joined",
             "attributes": [
-              { "key": "module", "value": "gamm" },
+              {
+                "key": "module",
+                "value": "gamm"
+              },
               {
                 "key": "sender",
                 "value": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m"
               },
-              { "key": "pool_id", "value": "497" },
+              {
+                "key": "pool_id",
+                "value": "497"
+              },
               {
                 "key": "tokens_in",
                 "value": "5146ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED,9969uosmo"
               },
-              { "key": "pool_id", "value": "497" }
+              {
+                "key": "pool_id",
+                "value": "497"
+              }
             ]
           },
           {
@@ -126,7 +153,10 @@
                 "key": "sender",
                 "value": "osmo1c9y7crgg6y9pfkq0y8mqzknqz84c3etr0kpcvj"
               },
-              { "key": "amount", "value": "4323192512586978gamm/pool/497" }
+              {
+                "key": "amount",
+                "value": "4323192512586978gamm/pool/497"
+              }
             ]
           }
         ]
@@ -149,7 +179,10 @@
                 "denom": "ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED",
                 "amount": "5274"
               },
-              { "denom": "uosmo", "amount": "10218" }
+              {
+                "denom": "uosmo",
+                "amount": "10218"
+              }
             ]
           }
         ],
@@ -166,13 +199,20 @@
               "key": "A8IP5t2eHTVOrTaxi6vKgjYIa8fGCzmvJX1xEmWcvQcn"
             },
             "mode_info": {
-              "single": { "mode": "SIGN_MODE_LEGACY_AMINO_JSON" }
+              "single": {
+                "mode": "SIGN_MODE_LEGACY_AMINO_JSON"
+              }
             },
             "sequence": "5"
           }
         ],
         "fee": {
-          "amount": [{ "denom": "uosmo", "amount": "0" }],
+          "amount": [
+            {
+              "denom": "uosmo",
+              "amount": "0"
+            }
+          ],
           "gas_limit": "140000",
           "payer": "",
           "granter": ""
