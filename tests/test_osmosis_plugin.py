@@ -6,7 +6,7 @@ from osmosis_plugin.osmosis_plugin import OsmosisPlugin
 
 class TestOsmosisPlugin(unittest.TestCase):
     def test_can_handle_ibc_received(self):
-        test_data = TestOsmosisPlugin.__get_test_data("ibc_received")
+        test_data = TestOsmosisPlugin.__get_test_data("ibc_received_effect1")
         transaction = OsmosisTransaction(test_data)
         chain_type = OsmosisPlugin.can_handle(transaction)
         assert chain_type
