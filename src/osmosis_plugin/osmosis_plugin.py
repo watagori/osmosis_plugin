@@ -47,6 +47,10 @@ class OsmosisPlugin(CaajPlugin):
             elif transaction_type == "MsgDelegate":
                 caaj_main = OsmosisPlugin.__get_caaj_delegate(transaction, address)
 
+            elif transaction_type == "MsgUpdateClient":
+                caaj_main = OsmosisPlugin.__get_caaj_update_client(transaction, address)
+                return caaj_main
+
             elif transaction_type in [
                 "MsgBeginUnlocking",
                 "MsgWithdrawDelegatorReward",
@@ -66,7 +70,6 @@ class OsmosisPlugin(CaajPlugin):
                 return caaj_fee
 
             elif transaction.get_transaction_fee() == 0 and caaj_main:
-                print(caaj_main)
                 return caaj_main
 
             else:
@@ -314,6 +317,90 @@ class OsmosisPlugin(CaajPlugin):
             caaj_send = OsmosisPlugin.__get_caaj_send(transaction)
 
             caaj.extend(caaj_send)
+        return caaj
+
+    @classmethod
+    def __get_caaj_update_client(
+        cls, transaction: Transaction, address: str
+    ) -> CaajJournal:
+        caaj = []
+        logs = transaction.get_transaction()["data"]["logs"]
+        for i, log in enumerate(logs):
+            fungible_token_packet_list = list(
+                filter(
+                    lambda event: event["type"] == "fungible_token_packet",
+                    log["events"],
+                )
+            )
+            if not fungible_token_packet_list:
+                pass
+            else:
+                success = OsmosisPlugin.__get_attribute_data(
+                    fungible_token_packet_list[0]["attributes"], "success"
+                )[0]["value"]
+
+                receiver = OsmosisPlugin.__get_attribute_data(
+                    fungible_token_packet_list[0]["attributes"], "receiver"
+                )[0]["value"]
+
+                if success == "true" and receiver == address:
+                    transfer_list = list(
+                        filter(
+                            lambda event: event["type"] == "transfer",
+                            logs[i]["events"],
+                        )
+                    )
+
+                    recipients = OsmosisPlugin.__get_attribute_data(
+                        transfer_list[0]["attributes"], "recipient"
+                    )
+
+                    senders = OsmosisPlugin.__get_attribute_data(
+                        transfer_list[0]["attributes"], "sender"
+                    )
+
+                    amounts = OsmosisPlugin.__get_attribute_data(
+                        transfer_list[0]["attributes"], "amount"
+                    )
+
+                    credit_to = senders[0]["value"]
+                    credit_from = recipients[0]["value"]
+                    debit_from = senders[0]["value"]
+                    debit_to = recipients[0]["value"]
+
+                    credit_name = OsmosisPlugin.__get_token_name(amounts[0]["value"])
+                    debit_name = OsmosisPlugin.__get_token_name(amounts[0]["value"])
+
+                    credit_amount = {
+                        credit_name: str(
+                            OsmosisPlugin.__get_token_amount(amounts[0]["value"])
+                        )
+                    }
+                    debit_amount = {
+                        debit_name: str(
+                            OsmosisPlugin.__get_token_amount(amounts[0]["value"])
+                        )
+                    }
+
+                    debit_title = "SPOT"
+                    credit_title = "RECEIVE"
+
+                    caaj_meta = CaajJournal.get_caaj_meta(
+                        transaction.get_timestamp(),
+                        transaction.transaction_id,
+                        "osmosis remove liquidity",
+                    )
+
+                    caaj_destination = CaajJournal.get_caaj_destination(
+                        debit_from, debit_to, credit_from, credit_to
+                    )
+                    caaj_value = CaajJournal.get_caaj_value(
+                        debit_title, debit_amount, credit_title, credit_amount
+                    )
+
+                    caaj_main = dict(**caaj_meta, **caaj_destination, **caaj_value)
+                    caaj.append(caaj_main)
+
         return caaj
 
     @classmethod

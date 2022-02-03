@@ -136,6 +136,42 @@ class TestOsmosisPlugin(unittest.TestCase):
         assert caajs[0]["credit_from"] == caaj_main_model["credit_from"]
         assert caajs[0]["credit_to"] == caaj_main_model["credit_to"]
 
+    def test_get_caajs_ibc_received_effect0(self):
+        test_data = TestOsmosisPlugin.__get_test_data("ibc_received_effect0")
+        transaction = OsmosisTransaction(test_data)
+        caajs = OsmosisPlugin.get_caajs(
+            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction
+        )
+
+        assert caajs == []
+
+    def test_get_caajs_ibc_received_effect1(self):
+        test_data = TestOsmosisPlugin.__get_test_data("ibc_received_effect1")
+        transaction = OsmosisTransaction(test_data)
+        caajs = OsmosisPlugin.get_caajs(
+            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction
+        )
+
+        caaj_main_model = {
+            "credit_amount": {
+                "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2": "0.25"
+            },
+            "debit_amount": {
+                "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2": "0.25"
+            },
+            "debit_from": "osmo1yl6hdjhmkf37639730gffanpzndzdpmhxy9ep3",
+            "credit_from": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
+            "credit_to": "osmo1yl6hdjhmkf37639730gffanpzndzdpmhxy9ep3",
+            "debit_to": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
+        }
+
+        assert caajs[0]["debit_amount"] == caaj_main_model["debit_amount"]
+        assert caajs[0]["credit_amount"] == caaj_main_model["credit_amount"]
+        assert caajs[0]["debit_from"] == caaj_main_model["debit_from"]
+        assert caajs[0]["credit_from"] == caaj_main_model["credit_from"]
+        assert caajs[0]["credit_to"] == caaj_main_model["credit_to"]
+        assert len(caajs) == 1
+
     @classmethod
     def __get_test_data(cls, filename):
         with open(f"tests/data/{filename}.json", encoding="utf-8") as jsonfile_local:
