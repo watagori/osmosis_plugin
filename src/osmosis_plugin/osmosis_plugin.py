@@ -110,7 +110,7 @@ class OsmosisPlugin(CaajPlugin):
             caaj_journal.set_caaj_destination(debit_from, debit_to, credit_from, credit_to)
             caaj_journal.set_caaj_value(debit_title, debit_amount, credit_title, credit_amount)
 
-            caaj.append(caaj_journal.__dict__)
+            caaj.append(caaj_journal)
         return caaj
 
     @classmethod
@@ -147,7 +147,7 @@ class OsmosisPlugin(CaajPlugin):
             caaj_journal.set_caaj_destination(debit_from, debit_to, credit_from, credit_to)
             caaj_journal.set_caaj_value(debit_title, debit_amount, credit_title, credit_amount)
 
-            caaj.append(caaj_journal.__dict__)
+            caaj.append(caaj_journal)
 
         return caaj
 
@@ -191,7 +191,7 @@ class OsmosisPlugin(CaajPlugin):
             caaj_journal.set_caaj_destination(debit_from, debit_to, credit_from, credit_to)
             caaj_journal.set_caaj_value(debit_title, debit_amount, credit_title, credit_amount)
 
-            caaj.append(caaj_journal.__dict__)
+            caaj.append(caaj_journal)
        
 
         return caaj
@@ -233,7 +233,7 @@ class OsmosisPlugin(CaajPlugin):
             caaj_journal.set_caaj_destination(debit_from, debit_to, credit_from, credit_to)
             caaj_journal.set_caaj_value(debit_title, debit_amount, credit_title, credit_amount)
 
-            caaj.append(caaj_journal.__dict__)
+            caaj.append(caaj_journal)
 
 
         return caaj
@@ -270,7 +270,7 @@ class OsmosisPlugin(CaajPlugin):
             caaj_journal.set_caaj_destination(debit_from, debit_to, credit_from, credit_to)
             caaj_journal.set_caaj_value(debit_title, debit_amount, credit_title, credit_amount)
 
-            caaj.append(caaj_journal.__dict__)
+            caaj.append(caaj_journal)
 
         attributes_list_transfer = OsmosisPlugin.__get_attributes_list(
             transaction, "transfer"
@@ -352,7 +352,7 @@ class OsmosisPlugin(CaajPlugin):
                     caaj_journal.set_caaj_destination(debit_from, debit_to, credit_from, credit_to)
                     caaj_journal.set_caaj_value(debit_title, debit_amount, credit_title, credit_amount)
 
-                    caaj.append(caaj_journal.__dict__)
+                    caaj.append(caaj_journal)
 
         return caaj
 

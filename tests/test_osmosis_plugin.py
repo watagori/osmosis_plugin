@@ -24,6 +24,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction
         )
         caaj_main_model = {
+            "transaction_id": "97A5C4A33FA36397A342D34D576AC07BA3F5CB5B7274E2BAF7092470A681FDEB",
             "debit_title": "SPOT",
             "debit_amount": {
                 "ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED": "0.005147"
@@ -37,13 +38,16 @@ class TestOsmosisPlugin(unittest.TestCase):
             "comment": "osmosis swap",
         }
 
-        assert caajs[0]["debit_amount"] == caaj_main_model["debit_amount"]
-        assert caajs[0]["debit_from"] == caaj_main_model["debit_from"]
-        assert caajs[0]["debit_to"] == caaj_main_model["debit_to"]
-        assert caajs[0]["credit_amount"] == caaj_main_model["credit_amount"]
-        assert caajs[0]["credit_from"] == caaj_main_model["credit_from"]
-        assert caajs[0]["credit_to"] == caaj_main_model["credit_to"]
-        assert len(caajs) == 1
+        assert caajs[0].debit_amount == caaj_main_model["debit_amount"]
+        assert caajs[0].debit_from == caaj_main_model["debit_from"]
+        assert caajs[0].debit_to == caaj_main_model["debit_to"]
+        assert caajs[0].credit_amount == caaj_main_model["credit_amount"]
+        assert caajs[0].credit_to == caaj_main_model["credit_to"]
+        assert caajs[0].transaction_id == caaj_main_model["transaction_id"]
+        assert caajs[0].credit_from == caaj_main_model["credit_from"]
+        assert caajs[1].transaction_id == caaj_main_model["transaction_id"]
+
+        assert len(caajs) == 2
 
     def test_get_caajs_send(self):
         test_data = TestOsmosisPlugin.__get_test_data("start_farming")
@@ -57,11 +61,8 @@ class TestOsmosisPlugin(unittest.TestCase):
             "debit_from": "osmo1njty28rqtpw6n59sjj4esw76enp4mg6g7cwrhc",
             "credit_from": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         }
-
-        assert caajs[0]["debit_amount"] == caaj_main_model["debit_amount"]
-        assert caajs[0]["credit_amount"] == caaj_main_model["credit_amount"]
-        assert caajs[0]["debit_from"] == caaj_main_model["debit_from"]
-        assert caajs[0]["credit_from"] == caaj_main_model["credit_from"]
+        assert caajs[0].debit_amount == caaj_main_model["debit_amount"]
+        assert caajs[0].credit_amount == caaj_main_model["credit_amount"]
 
     def test_get_caajs_join_pool(self):
         test_data = TestOsmosisPlugin.__get_test_data("join_pool")
@@ -80,14 +81,8 @@ class TestOsmosisPlugin(unittest.TestCase):
             "credit_to": "osmo1h7yfu7x4qsv2urnkl4kzydgxegdfyjdry5ee4xzj98jwz0uh07rqdkmprr",
             "debit_to": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         }
-
-        assert caajs[0]["debit_amount"] == caaj_main_model["debit_amount"]
-        assert caajs[0]["credit_amount"] == caaj_main_model["credit_amount"]
-        assert caajs[0]["debit_from"] == caaj_main_model["debit_from"]
-        assert caajs[0]["credit_from"] == caaj_main_model["credit_from"]
-        assert caajs[0]["credit_to"] == caaj_main_model["credit_to"]
-        assert caajs[0]["debit_to"] == caaj_main_model["debit_to"]
-
+        assert caajs[0].debit_amount == caaj_main_model["debit_amount"]
+        assert caajs[0].credit_amount == caaj_main_model["credit_amount"]
     def test_get_caajs_exit_pool(self):
         test_data = TestOsmosisPlugin.__get_test_data("exit_pool")
         transaction = OsmosisTransaction(test_data)
@@ -106,12 +101,9 @@ class TestOsmosisPlugin(unittest.TestCase):
             "debit_to": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         }
 
-        assert caajs[0]["debit_amount"] == caaj_main_model["debit_amount"]
-        assert caajs[0]["credit_amount"] == caaj_main_model["credit_amount"]
-        assert caajs[0]["debit_from"] == caaj_main_model["debit_from"]
-        assert caajs[0]["credit_from"] == caaj_main_model["credit_from"]
-        assert caajs[0]["credit_to"] == caaj_main_model["credit_to"]
-        assert caajs[0]["debit_to"] == caaj_main_model["debit_to"]
+
+        assert caajs[0].debit_amount == caaj_main_model["debit_amount"]
+        assert caajs[0].credit_amount == caaj_main_model["credit_amount"]
 
     def test_get_caajs_delegate(self):
         test_data = TestOsmosisPlugin.__get_test_data("delegate")
@@ -130,11 +122,9 @@ class TestOsmosisPlugin(unittest.TestCase):
             "debit_to": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         }
 
-        assert caajs[0]["debit_amount"] == caaj_main_model["debit_amount"]
-        assert caajs[0]["credit_amount"] == caaj_main_model["credit_amount"]
-        assert caajs[0]["debit_from"] == caaj_main_model["debit_from"]
-        assert caajs[0]["credit_from"] == caaj_main_model["credit_from"]
-        assert caajs[0]["credit_to"] == caaj_main_model["credit_to"]
+        assert caajs[0].debit_amount == caaj_main_model["debit_amount"]
+        assert caajs[0].credit_amount == caaj_main_model["credit_amount"]
+
 
     def test_get_caajs_ibc_received_effect0(self):
         test_data = TestOsmosisPlugin.__get_test_data("ibc_received_effect0")
@@ -165,12 +155,9 @@ class TestOsmosisPlugin(unittest.TestCase):
             "debit_to": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
         }
 
-        assert caajs[0]["debit_amount"] == caaj_main_model["debit_amount"]
-        assert caajs[0]["credit_amount"] == caaj_main_model["credit_amount"]
-        assert caajs[0]["debit_from"] == caaj_main_model["debit_from"]
-        assert caajs[0]["credit_from"] == caaj_main_model["credit_from"]
-        assert caajs[0]["credit_to"] == caaj_main_model["credit_to"]
-        assert len(caajs) == 1
+
+        assert caajs[0].debit_amount == caaj_main_model["debit_amount"]
+        assert caajs[0].credit_amount == caaj_main_model["credit_amount"]
 
     @classmethod
     def __get_test_data(cls, filename):
@@ -179,5 +166,10 @@ class TestOsmosisPlugin(unittest.TestCase):
         return test_data
 
 
+
+
+
+
 if __name__ == "__main__":
     unittest.main()
+
