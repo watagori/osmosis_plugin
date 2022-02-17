@@ -8,13 +8,13 @@ MEGA = 10**6
 EXA = 10**18
 
 class OsmosisPlugin(CaajPlugin):
-  CHAIN = "osmosis"
+  chain = "osmosis"
   PLATFORM = "cosmos_osmosis"
 
   @classmethod
   def can_handle(cls, transaction: Transaction) -> bool:
     chain_type = transaction.get_transaction()["header"]["chain_id"]
-    return OsmosisPlugin.CHAIN in chain_type
+    return OsmosisPlugin.chain in chain_type
 
   @classmethod
   def get_caajs(cls, address: str, transaction: Transaction) -> CaajJournal:
