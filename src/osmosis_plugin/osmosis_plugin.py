@@ -18,68 +18,43 @@ class OsmosisPlugin(CaajPlugin):
 
   @classmethod
   def get_caajs(cls, address: str, transaction: Transaction) -> CaajJournal:
-    if transaction.get_transaction()["data"]["code"] == 0:
-      transaction_type = transaction.get_transaction()["data"]["tx"]["body"]["messages"][0]["@type"]\
-          .split(".")[-1]
+    caaj = []
+    if transaction.get_transaction()["data"]["code"] != 0:
+      return caaj
+    transaction_type = transaction.get_transaction()["data"]["tx"]["body"]["messages"][0]["@type"]\
+        .split(".")[-1]
+    if transaction_type in [
+        "MsgSwapExactAmountIn",
+        "MsgJoinSwapExternAmountIn",
+    ]:
+      caaj.extend(OsmosisPlugin.__get_caaj_swap(transaction))
+    elif transaction_type in "MsgTransfer":
+      caaj.extend(OsmosisPlugin.__get_caaj_transfer(transaction))
+    elif transaction_type == "MsgJoinPool":
+      caaj.extend(OsmosisPlugin.__get_caaj_join_pool(transaction))
+    elif transaction_type in "MsgLockTokens":
+      caaj.extend(OsmosisPlugin.__get_caaj_send(
+          transaction, "STAKING", "SPOT", "osmosis lock tokens"
+      ))
+    elif transaction_type == "MsgSend":
+      caaj.extend(OsmosisPlugin.__get_caaj_send(
+          transaction, "TRANSFER", "SPOT", "osmosis send"
+      ))
+    elif transaction_type == "MsgExitPool":
+      caaj.extend(OsmosisPlugin.__get_caaj_exit_pool(transaction))
+    elif transaction_type == "MsgDelegate":
+      caaj.extend(OsmosisPlugin.__get_caaj_delegate(transaction, address))
+    elif transaction_type == "MsgUpdateClient":
+      caaj.extend(OsmosisPlugin.__get_caaj_update_client(
+          transaction, address))
+      return caaj # it ignores fee because this address does not pay fee in case of MsgUpdateClient.
 
-      if transaction_type in [
-          "MsgSwapExactAmountIn",
-          "MsgJoinSwapExternAmountIn",
-      ]:
-        caaj_main = OsmosisPlugin.__get_caaj_swap(transaction)
+    transaction_fee = transaction.get_transaction_fee()
+    if transaction_fee != 0:
+      caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
+      caaj.extend(caaj_fee)
 
-      elif transaction_type in "MsgTransfer":
-        caaj_main = OsmosisPlugin.__get_caaj_transfer(transaction)
-
-      elif transaction_type == "MsgJoinPool":
-        caaj_main = OsmosisPlugin.__get_caaj_join_pool(transaction)
-
-      elif transaction_type in "MsgLockTokens":
-        caaj_main = OsmosisPlugin.__get_caaj_send(
-            transaction, "STAKING", "SPOT", "osmosis lock tokens"
-        )
-
-      elif transaction_type == "MsgSend":
-        caaj_main = OsmosisPlugin.__get_caaj_send(
-            transaction, "TRANSFER", "SPOT", "osmosis send"
-        )
-
-      elif transaction_type == "MsgExitPool":
-        caaj_main = OsmosisPlugin.__get_caaj_exit_pool(transaction)
-
-      elif transaction_type == "MsgDelegate":
-        caaj_main = OsmosisPlugin.__get_caaj_delegate(transaction, address)
-
-      elif transaction_type == "MsgUpdateClient":
-        caaj_main = OsmosisPlugin.__get_caaj_update_client(
-            transaction, address)
-        return caaj_main
-
-      elif transaction_type in [
-          "MsgBeginUnlocking",
-          "MsgWithdrawDelegatorReward",
-          "MsgVote",
-          "MsgUnlockPeriodLock",
-          "MsgBeginRedelegate",
-      ]:
-        caaj_main = []
-
-      if transaction.get_transaction_fee() != 0 and caaj_main:
-        caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
-        caaj = caaj_main + caaj_fee
-        return caaj
-
-      elif transaction.get_transaction_fee() != 0 and not caaj_main:
-        caaj_fee = OsmosisPlugin.__get_caaj_fee(transaction, address)
-        return caaj_fee
-
-      elif transaction.get_transaction_fee() == 0 and caaj_main:
-        return caaj_main
-
-      else:
-        return []
-    else:
-      return []
+    return caaj
 
   @classmethod
   def __get_caaj_swap(cls, transaction: Transaction) -> CaajJournal:

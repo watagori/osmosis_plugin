@@ -10,7 +10,8 @@ setup(
   url='https://github.com/ca3-caaip/ca3-caaip',
 
   extras_require={
-      "test": ["pytest", "pytest-cov", "senkalib"]
+      "test": ["pytest", "pytest-cov", "senkalib"],
+      "main": ["senkalib", "pandas"]      
   },
 
   packages=find_packages('src'),
