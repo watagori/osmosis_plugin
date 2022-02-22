@@ -1,0 +1,8 @@
+uuid,symbol,description,chain,original_id
+e7816a15-ce91-0aa8-0508-21d0d19f3aa8,atom,native token for cosmos,osmosis,ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2
+e7816a15-ce91-0aa8-0508-21d0d19f3aa8,atom,native token for cosmos,bsc,0x0Eb3a705fc54725037CC9e008bDede697f62F335
+e7816a15-ce91-0aa8-0508-21d0d19f3aa8,atom,native token for cosmos,atom,
+3a2570c5-15c4-2860-52a8-bff14f27a236,juno,native token for juno,osmosis,ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED
+d7fdee9c-13cf-afd3-e793-33d56c10fc12,luna,native token for terra,osmosis,ibc/0EF15DF2F02480ADE0BB6E85D9EBB5DAEA2836D3860E9F97F9AADE4F57A31AA0
+432374c6-5e69-eb86-10d9-8c49176aeb1b,ust,doller peg token on terra,osmosis,ibc/BE1BB42D4BE3C30D50B68D7C41DB4DFCE9678E8EF8C539F6E6A9345048894FCC
+c0c8e177-53c3-c408-d8bd-067a2ef41ea7,osmo,native token for osmosis,osmosis,
