@@ -481,22 +481,22 @@ class OsmosisPlugin(CaajPlugin):
   def __get_token_amount_dict(cls, amount:Decimal, token:str,
     chain:str, token_original_ids: DataFrame) -> dict:
     symbol = token
-    uuid = 'c0c8e177-53c3-c408-d8bd-067a2ef41ea7'
+    symbol_uuid = 'c0c8e177-53c3-c408-d8bd-067a2ef41ea7'
     original_id = None
     if token != 'osmo':
       original_id = token
       token_info = token_original_ids.query(f"chain == '{chain}' and original_id == '{original_id}'")
       if len(token_info) == 0:
         symbol = None
-        uuid = None
+        symbol_uuid = None
       elif len(token_info) > 1:
         raise ValueError('token_original_ids table has duplicated entries')
       else:
         symbol = str(token_info['symbol'].iloc[-1])
-        uuid = token_info['uuid'].iloc[-1]
+        symbol_uuid = token_info['symbol_uuid'].iloc[-1]
 
     amount_dict = {
-      "token": {"symbol": symbol, "original_id": original_id, "uuid": uuid},
+      "token": {"symbol": symbol, "original_id": original_id, "symbol_uuid": symbol_uuid},
       "amount": amount
     }
 
