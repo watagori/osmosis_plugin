@@ -1,4 +1,4 @@
-uuid,symbol,description,chain,original_id
+symbol_uuid,symbol,description,chain,original_id
 e7816a15-ce91-0aa8-0508-21d0d19f3aa8,atom,native token for cosmos,osmosis,ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2
 e7816a15-ce91-0aa8-0508-21d0d19f3aa8,atom,native token for cosmos,bsc,0x0Eb3a705fc54725037CC9e008bDede697f62F335
 e7816a15-ce91-0aa8-0508-21d0d19f3aa8,atom,native token for cosmos,atom,

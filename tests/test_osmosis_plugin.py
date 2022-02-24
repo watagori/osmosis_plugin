@@ -39,7 +39,7 @@ class TestOsmosisPlugin(unittest.TestCase):
           "token": {
             "symbol":"juno",
             "original_id":"ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED",
-            "uuid":"3a2570c5-15c4-2860-52a8-bff14f27a236"
+            "symbol_uuid":"3a2570c5-15c4-2860-52a8-bff14f27a236"
           },
           "amount": "0.005147"
         }
@@ -52,7 +52,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol":"osmo",
               "original_id":None,
-              "uuid":"c0c8e177-53c3-c408-d8bd-067a2ef41ea7"
+              "symbol_uuid":"c0c8e177-53c3-c408-d8bd-067a2ef41ea7"
             },
             "amount": "0.01"
           }
@@ -82,7 +82,7 @@ class TestOsmosisPlugin(unittest.TestCase):
           "token": {
             "symbol":"osmo",
             "original_id":None,
-            "uuid":"c0c8e177-53c3-c408-d8bd-067a2ef41ea7"
+            "symbol_uuid":"c0c8e177-53c3-c408-d8bd-067a2ef41ea7"
           },
           "amount": "0.000123"
         }
@@ -95,7 +95,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol":"osmo",
               "original_id":None,
-              "uuid":"c0c8e177-53c3-c408-d8bd-067a2ef41ea7"
+              "symbol_uuid":"c0c8e177-53c3-c408-d8bd-067a2ef41ea7"
             },
             "amount": "0.000123"
           }
@@ -124,7 +124,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": "juno",
               "original_id": "ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED",
-              "uuid":"3a2570c5-15c4-2860-52a8-bff14f27a236"
+              "symbol_uuid":"3a2570c5-15c4-2860-52a8-bff14f27a236"
             },
             "amount": "0.000049"
           }
@@ -137,7 +137,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": "juno",
               "original_id": "ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED",
-              "uuid":"3a2570c5-15c4-2860-52a8-bff14f27a236"
+              "symbol_uuid":"3a2570c5-15c4-2860-52a8-bff14f27a236"
             },
             "amount": "0.000049"
           }
@@ -167,7 +167,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": None,
               "original_id": "gamm/pool/497",
-              "uuid":None
+              "symbol_uuid":None
             },
             "amount": "0.004323192512586978"
           }
@@ -177,7 +177,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": "juno",
               "original_id": "ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED",
-              "uuid": "3a2570c5-15c4-2860-52a8-bff14f27a236"
+              "symbol_uuid": "3a2570c5-15c4-2860-52a8-bff14f27a236"
             },
             "amount": "0.005146"
           },
@@ -185,7 +185,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": "osmo",
               "original_id": None,
-              "uuid": "c0c8e177-53c3-c408-d8bd-067a2ef41ea7"
+              "symbol_uuid": "c0c8e177-53c3-c408-d8bd-067a2ef41ea7"
             },
             "amount": "0.009969"
           }
@@ -217,7 +217,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": None,
               "original_id": "gamm/pool/497",
-              "uuid":None
+              "symbol_uuid":None
             },
             "amount": "0.001161596256293489"
           }
@@ -227,7 +227,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": "juno",
               "original_id": "ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED",
-              "uuid": "3a2570c5-15c4-2860-52a8-bff14f27a236"
+              "symbol_uuid": "3a2570c5-15c4-2860-52a8-bff14f27a236"
             },
             "amount": "0.001382"
           },
@@ -235,7 +235,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": "osmo",
               "original_id": None,
-              "uuid": "c0c8e177-53c3-c408-d8bd-067a2ef41ea7"
+              "symbol_uuid": "c0c8e177-53c3-c408-d8bd-067a2ef41ea7"
             },
             "amount": "0.002678"
           }
@@ -267,7 +267,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": None,
               "original_id": "gamm/pool/497",
-              "uuid":None
+              "symbol_uuid":None
             },
             "amount": "0.002"
           }
@@ -277,7 +277,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": None,
               "original_id": "gamm/pool/497",
-              "uuid":None
+              "symbol_uuid":None
             },
             "amount": "0.002"
           }
@@ -309,7 +309,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": 'osmo',
               "original_id": None,
-              "uuid": 'c0c8e177-53c3-c408-d8bd-067a2ef41ea7'
+              "symbol_uuid": 'c0c8e177-53c3-c408-d8bd-067a2ef41ea7'
             },
             "amount": "0.1"
           }
@@ -319,7 +319,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": 'osmo',
               "original_id": None,
-              "uuid": 'c0c8e177-53c3-c408-d8bd-067a2ef41ea7'
+              "symbol_uuid": 'c0c8e177-53c3-c408-d8bd-067a2ef41ea7'
             },
             "amount": "0.1"
           }
@@ -362,7 +362,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": "atom",
               "original_id": "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
-              "uuid":"e7816a15-ce91-0aa8-0508-21d0d19f3aa8"
+              "symbol_uuid":"e7816a15-ce91-0aa8-0508-21d0d19f3aa8"
             },
             "amount": "0.25"
           }
@@ -372,7 +372,7 @@ class TestOsmosisPlugin(unittest.TestCase):
             "token": {
               "symbol": "atom",
               "original_id": "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
-              "uuid":"e7816a15-ce91-0aa8-0508-21d0d19f3aa8"
+              "symbol_uuid":"e7816a15-ce91-0aa8-0508-21d0d19f3aa8"
             },
             "amount": "0.25"
           }
