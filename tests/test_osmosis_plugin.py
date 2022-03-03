@@ -388,16 +388,18 @@ class TestOsmosisPlugin(unittest.TestCase):
 
   @classmethod
   def __get_caaj_data(cls, caaj: CaajJournal):
+    debit_amount = list(map(lambda x:  {'token':{'symbol':x.symbol, 'original_id':x.original_id, 'symbol_uuid':x.symbol_uuid}, 'amount': x.amount}, caaj.debit.amounts))
+    credit_amount = list(map(lambda x:  {'token':{'symbol':x.symbol, 'original_id':x.original_id, 'symbol_uuid':x.symbol_uuid}, 'amount': x.amount}, caaj.credit.amounts))
     caaj_data = {
-        "debit_title": caaj.debit_title,
-        "credit_title": caaj.credit_title,
-        "debit_amount": caaj.debit_amount,
-        "credit_amount": caaj.credit_amount,
-        "debit_from": caaj.debit_from,
-        "credit_from": caaj.credit_from,
-        "credit_to": caaj.credit_to,
-        "debit_to": caaj.debit_to,
-        "comment": caaj.comment,
+        "debit_title": caaj.debit.title,
+        "credit_title": caaj.credit.title,
+        "debit_amount": debit_amount,
+        "credit_amount": credit_amount,
+        "debit_from": caaj.debit.side_from,
+        "credit_from": caaj.credit.side_from,
+        "credit_to": caaj.credit.side_to,
+        "debit_to": caaj.debit.side_to,
+        "comment": caaj.meta.comment,
     }
     return caaj_data
 
