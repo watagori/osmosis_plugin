@@ -8,7 +8,7 @@ import sys
 
 if __name__ == '__main__':
   args = sys.argv
-  address = args[1]  
+  address = args[1]
   caaj = []
   settings = SenkaSetting({})
   transactions = OsmosisTransactionGenerator\
@@ -21,8 +21,11 @@ if __name__ == '__main__':
       )
       caaj.extend(caaj_peace)
 
-  caaj_dict_list = map(lambda x: vars(x), caaj)
-  df = pd.DataFrame(caaj_dict_list)
+  caaj = SenkaLib.get_caaj_jounal_dicts(caaj)
+  df = pd.DataFrame(caaj)
   df = df.sort_values('time')
   caaj_csv = df.to_csv(None, index=False)
   print(caaj_csv)
+
+
+

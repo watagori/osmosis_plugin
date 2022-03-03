@@ -99,14 +99,6 @@ class OsmosisPlugin(CaajPlugin):
 
       debit = CaajJournalSide(debit_from, debit_to, debit_title, debit_amount_list)
       credit = CaajJournalSide(credit_from, credit_to, credit_title, credit_amount_list)
-
-#      caaj_journal.set_caaj_destination(
-#          debit_from, debit_to, credit_from, credit_to
-#      )
-#      caaj_journal.set_caaj_value(
-#          debit_title, debit_amount_list, credit_title, credit_amount_list
-#      )
-
       caaj_journal = CaajJournal(meta, debit, credit)
       caaj.append(caaj_journal)
     return caaj
@@ -131,10 +123,8 @@ class OsmosisPlugin(CaajPlugin):
         transaction.transaction_id,
         "osmosis ibc transfer",
     )
-    #debit = CaajJournalSide(receiver, sender, sender, receiver)
     debit = CaajJournalSide(receiver, sender, debit_title, amount_list)
     credit = CaajJournalSide(sender,receiver, credit_title, amount_list)
-    #caaj_journal.set_caaj_value(debit_title, amount_list, credit_title, amount_list)
     caaj_journal = CaajJournal(meta, debit, credit)
 
     return [caaj_journal]
@@ -172,7 +162,6 @@ class OsmosisPlugin(CaajPlugin):
 
       debit = CaajJournalSide(debit_from, debit_to, debit_title, amount_list)
       credit = CaajJournalSide(credit_from, credit_to, credit_title, amount_list)
-
       caaj_journal = CaajJournal(meta, debit, credit)
       caaj.append(caaj_journal)
 
@@ -217,12 +206,6 @@ class OsmosisPlugin(CaajPlugin):
           transaction.transaction_id,
           "osmosis join pool",
       )
-      #caaj_journal.set_caaj_destination(
-      #    debit_from, debit_to, credit_from, credit_to
-      #)
-      #caaj_journal.set_caaj_value(
-      #    debit_title, debit_amount_list, credit_title, credit_amount_list
-      #)
       debit = CaajJournalSide(debit_from, debit_to, debit_title, debit_amount_list)
       credit = CaajJournalSide(credit_from, credit_to, credit_title, credit_amount_list)
       caaj_journal = CaajJournal(meta, debit, credit)
@@ -275,14 +258,6 @@ class OsmosisPlugin(CaajPlugin):
       )
       debit = CaajJournalSide(debit_from, debit_to, debit_title, debit_amount_list)
       credit = CaajJournalSide(credit_from, credit_to, credit_title, credit_amount_list)
-
-#      caaj_journal.set_caaj_destination(
-#          debit_from, debit_to, credit_from, credit_to
-#      )
-#      caaj_journal.set_caaj_value(
-#          debit_title, debit_amount_list, credit_title, credit_amount_list
-#      )
-
       caaj_journal = CaajJournal(meta, debit, credit)
       caaj.append(caaj_journal)
 
@@ -309,10 +284,6 @@ class OsmosisPlugin(CaajPlugin):
         transaction.transaction_id,
         "osmosis swap",
     )
-#    caaj_journal.set_caaj_destination(
-#        debit_from, debit_to, credit_from, credit_to)
-#    caaj_journal.set_caaj_value(debit_title, amount_list, credit_title, amount_list)
-
     debit = CaajJournalSide(debit_from, debit_to, debit_title, amount_list)
     credit = CaajJournalSide(credit_from, credit_to, credit_title, amount_list)
     caaj_journal = CaajJournal(meta, debit, credit)
@@ -349,12 +320,6 @@ class OsmosisPlugin(CaajPlugin):
           transaction.transaction_id,
           "osmosis delegate",
       )
-      #caaj_journal.set_caaj_destination(
-      #    debit_from, debit_to, credit_from, credit_to
-      #)
-      #caaj_journal.set_caaj_value(
-      #    debit_title, amount_list, credit_title, amount_list
-      #)
       debit = CaajJournalSide(debit_from, debit_to, debit_title, amount_list)
       credit = CaajJournalSide(credit_from, credit_to, credit_title, amount_list)
       caaj_journal = CaajJournal(meta, debit, credit)
@@ -438,12 +403,6 @@ class OsmosisPlugin(CaajPlugin):
 
           debit = CaajJournalSide(debit_from, debit_to, debit_title, amount_list)
           credit = CaajJournalSide(credit_from, credit_to, credit_title, amount_list)
-          #caaj_journal.set_caaj_destination(
-          #    debit_from, debit_to, credit_from, credit_to
-          #)
-          #caaj_journal.set_caaj_value(
-          #    debit_title, amount_list, credit_title, amount_list
-          #)
           caaj_journal = CaajJournal(meta, debit, credit)
 
           caaj.append(caaj_journal)
