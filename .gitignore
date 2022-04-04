@@ -108,3 +108,6 @@ venv.bak/
 # key 
 key/
 tests/get_transaction.py
+
+# intelij
+.idea/

@@ -188,7 +188,7 @@
           "amount": [
             {
               "denom": "uosmo",
-              "amount": "123"
+              "amount": "0"
             }
           ],
           "gas_limit": "250000",
