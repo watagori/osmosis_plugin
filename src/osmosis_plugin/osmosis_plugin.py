@@ -16,7 +16,7 @@ class OsmosisPlugin:
     TOKEN_ORIGINAL_ID_URL = "https://raw.githubusercontent.com/ca3-caaip/token_original_id/master/token_original_id.csv"
 
     @classmethod
-    def can_handle(cls, transaction: Transaction) -> bool:
+    def can_handle(cls, transaction: Transaction, token_original_ids: list) -> bool:
         chain_type = transaction.get_transaction()["header"]["chain_id"]
         return OsmosisPlugin.chain in chain_type
 
