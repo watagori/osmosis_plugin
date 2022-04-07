@@ -79,16 +79,16 @@ class OsmosisPlugin:
             token_original_id_to = OsmosisPlugin._get_token_original_id(
                 amounts[0]["value"]
             )
-            token_symbol_to = token_table.get_symbol(token_original_id_to)
-            symbol_uuid_to = token_table.get_symbol_uuid(token_original_id_to)
+            token_symbol_to = token_table.get_symbol(OsmosisPlugin.chain, token_original_id_to)
+            symbol_uuid_to = token_table.get_symbol_uuid(OsmosisPlugin.chain, token_original_id_to)
 
             amount_from = OsmosisPlugin._get_token_amount(amounts[1]["value"])
             token_original_id_from = OsmosisPlugin._get_token_original_id(
                 amounts[1]["value"]
             )
 
-            token_symbol_from = token_table.get_symbol(token_original_id_from)
-            symbol_uuid_from = token_table.get_symbol_uuid(token_original_id_from)
+            token_symbol_from = token_table.get_symbol(OsmosisPlugin.chain, token_original_id_from)
+            symbol_uuid_from = token_table.get_symbol_uuid(OsmosisPlugin.chain, token_original_id_from)
 
             trade_uuid = OsmosisPlugin._get_uuid()
 
@@ -134,14 +134,14 @@ class OsmosisPlugin:
         caaj = []
         message = transaction.get_transaction()["data"]["tx"]["body"]["messages"][0]
         token_original_id = message["token"]["denom"]
-        symbol = token_table.get_symbol(token_original_id)
-        symbol_uuid = token_table.get_symbol_uuid(token_original_id)
+        symbol = token_table.get_symbol(OsmosisPlugin.chain, token_original_id)
+        symbol_uuid = token_table.get_symbol_uuid(OsmosisPlugin.chain, token_original_id)
 
         caaj_journal_lose = CaajJournal(
             transaction.get_timestamp(),
             cls.chain,
             cls.PLATFORM,
-            "osmosis",
+            cls.chain,
             transaction.get_transaction_id(),
             None,
             "send",
@@ -178,10 +178,10 @@ class OsmosisPlugin:
                 amounts[0]["value"].split(",")[1]
             )
 
-            token_symbol_one = token_table.get_symbol(token_original_id_one)
-            symbol_uuid_one = token_table.get_symbol_uuid(token_original_id_one)
-            token_symbol_two = token_table.get_symbol(token_original_id_two)
-            symbol_uuid_two = token_table.get_symbol_uuid(token_original_id_two)
+            token_symbol_one = token_table.get_symbol(OsmosisPlugin.chain, token_original_id_one)
+            symbol_uuid_one = token_table.get_symbol_uuid(OsmosisPlugin.chain, token_original_id_one)
+            token_symbol_two = token_table.get_symbol(OsmosisPlugin.chain, token_original_id_two)
+            symbol_uuid_two = token_table.get_symbol_uuid(OsmosisPlugin.chain, token_original_id_two)
 
             trade_uuid = OsmosisPlugin._get_uuid()
 
@@ -258,8 +258,8 @@ class OsmosisPlugin:
                 amounts[0]["value"]
             )
 
-            token_symbol_liquidity = token_table.get_symbol(token_original_id_liquidity)
-            symbol_uuid_liquidity = token_table.get_symbol_uuid(token_original_id_liquidity)
+            token_symbol_liquidity = token_table.get_symbol(OsmosisPlugin.chain, token_original_id_liquidity)
+            symbol_uuid_liquidity = token_table.get_symbol_uuid(OsmosisPlugin.chain, token_original_id_liquidity)
             amount_liquidity = OsmosisPlugin._get_token_amount(amounts[0]["value"])
 
             caaj_journal_get_liquidity = CaajJournal(
@@ -296,8 +296,8 @@ class OsmosisPlugin:
             token_original_id_one = OsmosisPlugin._get_token_original_id(
                 amounts[0]["value"].split(",")[0]
             )
-            token_symbol_one = token_table.get_symbol(token_original_id_one)
-            symbol_uuid_one = token_table.get_symbol_uuid(token_original_id_one)
+            token_symbol_one = token_table.get_symbol(OsmosisPlugin.chain, token_original_id_one)
+            symbol_uuid_one = token_table.get_symbol_uuid(OsmosisPlugin.chain, token_original_id_one)
 
             trade_uuid = OsmosisPlugin._get_uuid()
 
@@ -326,8 +326,8 @@ class OsmosisPlugin:
             token_original_id_two = OsmosisPlugin._get_token_original_id(
                 amounts[0]["value"].split(",")[1]
             )
-            token_symbol_two = token_table.get_symbol(token_original_id_two)
-            symbol_uuid_two = token_table.get_symbol_uuid(token_original_id_two)
+            token_symbol_two = token_table.get_symbol(OsmosisPlugin.chain, token_original_id_two)
+            symbol_uuid_two = token_table.get_symbol_uuid(OsmosisPlugin.chain, token_original_id_two)
 
             caaj_journal_lose_two = CaajJournal(
                 transaction.get_timestamp(),
@@ -351,8 +351,8 @@ class OsmosisPlugin:
                 amounts[1]["value"]
             )
 
-            token_symbol_liquidity = token_table.get_symbol(token_original_id_liquidity)
-            symbol_uuid_liquidity = token_table.get_symbol_uuid(token_original_id_liquidity)
+            token_symbol_liquidity = token_table.get_symbol(OsmosisPlugin.chain, token_original_id_liquidity)
+            symbol_uuid_liquidity = token_table.get_symbol_uuid(OsmosisPlugin.chain, token_original_id_liquidity)
             amount_liquidity = OsmosisPlugin._get_token_amount(amounts[1]["value"])
 
             caaj_journal_get_liquidity = CaajJournal(
@@ -375,7 +375,7 @@ class OsmosisPlugin:
         return caaj
 
     @classmethod
-    def _get_caaj_delegate(cls, address: str, transaction: Transaction, token_table:TokenOriginalIdTable) -> list:
+    def _get_caaj_delegate(cls, address: str, transaction: Transaction, token_table: TokenOriginalIdTable) -> list:
         caaj = []
 
         attributes_list_delegate = OsmosisPlugin._get_attributes_list(
@@ -391,8 +391,8 @@ class OsmosisPlugin:
             token_original_id_staking = OsmosisPlugin._get_token_original_id(
                 amounts[0]["value"]
             )
-            token_symbol_staking = token_table.get_symbol(token_original_id_staking)
-            symbol_uuid_staking = token_table.get_symbol_uuid(token_original_id_staking)
+            token_symbol_staking = token_table.get_symbol(OsmosisPlugin.chain, token_original_id_staking)
+            symbol_uuid_staking = token_table.get_symbol_uuid(OsmosisPlugin.chain, token_original_id_staking)
             amount_liquidity = OsmosisPlugin._get_token_amount(amounts[0]["value"])
 
             caaj_journal_get_liquidity = CaajJournal(
@@ -463,8 +463,8 @@ class OsmosisPlugin:
                         amounts[0]["value"]
                     )
 
-                    token_symbol_liquidity = token_table.get_symbol(token_original_id_liquidity)
-                    symbol_uuid_liquidity = token_table.get_symbol_uuid(token_original_id_liquidity)
+                    token_symbol_liquidity = token_table.get_symbol(OsmosisPlugin.chain, token_original_id_liquidity)
+                    symbol_uuid_liquidity = token_table.get_symbol_uuid(OsmosisPlugin.chain, token_original_id_liquidity)
                     amount_liquidity = OsmosisPlugin._get_token_amount(
                         amounts[0]["value"]
                     )
@@ -473,10 +473,10 @@ class OsmosisPlugin:
                         transaction.get_timestamp(),
                         cls.chain,
                         cls.PLATFORM,
-                        "lend",
+                        cls.chain,
                         transaction.get_transaction_id(),
                         OsmosisPlugin._get_uuid(),
-                        "deposit",
+                        "receive",
                         amount_liquidity,
                         token_symbol_liquidity,
                         token_original_id_liquidity,
@@ -495,7 +495,7 @@ class OsmosisPlugin:
             transaction.get_timestamp(),
             cls.chain,
             cls.PLATFORM,
-            "osmosis",
+            cls.chain,
             transaction.get_transaction_id(),
             None,
             "lose",
@@ -558,32 +558,3 @@ class OsmosisPlugin:
 
         return attributes_list
 
-    @classmethod
-    def _get_token_original_id_for_symbol(cls, value: str) -> str:
-        token_original_id = value[re.search(r"\d+", value).end() :]
-        if token_original_id == "uosmo" or token_original_id == "":
-            token_original_id = "osmo"
-        elif token_original_id == "uion":
-            token_original_id = "ion"
-        return token_original_id
-
-    @classmethod
-    def _get_symbol_uuid(cls, original_id: str, chain: str, symbol: str, token_original_ids: list) -> str:
-        if original_id is None:
-            #df = pd.read_csv(cls.TOKEN_ORIGINAL_ID_URL)
-            #token_table = df[(df["chain"] == chain) & (df["symbol"] == symbol)]
-            if len(token_table) == 0:
-                return str(uuid.uuid4())
-            symbol_uuid = token_table["symbol_uuid"].item()
-            return symbol_uuid
-
-        df = pd.read_csv(cls.TOKEN_ORIGINAL_ID_URL)
-        token_table = df[
-            (df["original_id"] == original_id)
-            & (df["chain"] == chain)
-            & (df["symbol"] == symbol)
-        ]
-        if len(token_table) == 0:
-            return str(uuid.uuid4())
-        symbol_uuid = token_table["symbol_uuid"].item()
-        return symbol_uuid

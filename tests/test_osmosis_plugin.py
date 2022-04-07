@@ -14,7 +14,25 @@ from unittest.mock import MagicMock
 
 
 class TestOsmosisPlugin:
-    token_original_ids = None
+    @classmethod
+    def get_token_table_mock(cls):
+        def mock_get_symbol(chain: str, token_original_id: str) -> str:
+            if chain == "osmosis" and token_original_id is None:
+                return "osmo"
+            elif chain == "osmosis" and token_original_id == "ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED":
+                return "juno"
+            elif chain == "osmosis" and token_original_id == "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2":
+                return "atom"
+            else:
+                return None
+
+        def mock_get_symbol_uuid(chain: str, token_original_id: str) -> str:
+            return "3a2570c5-15c4-2860-52a8-bff14f27a236"
+
+        mock = MagicMock()
+        mock.get_symbol.side_effect = mock_get_symbol
+        mock.get_symbol_uuid.side_effect = mock_get_symbol_uuid
+        return mock
 
     def test_can_handle_ibc_received(self):
         test_data = TestOsmosisPlugin._get_test_data("ibc_received_effect1")
@@ -142,26 +160,6 @@ class TestOsmosisPlugin:
         assert caajs[0].caaj_from == "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m"
         assert caajs[0].caaj_to == "juno14ls9rcxxd5gqwshj85dae74tcp3umyppqw2uq4"
         assert caajs[0].comment == ""
-
-    @classmethod
-    def get_token_table_mock(cls):
-        def mock_get_symbol(token_original_id: str) -> str:
-            if token_original_id is None:
-                return "osmo"
-            elif token_original_id == "ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED":
-                return "juno"
-            elif token_original_id == "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2":
-                return "atom"
-            else:
-                return None
-
-        def mock_get_symbol_uuid(token_original_id: str) -> str:
-            return "3a2570c5-15c4-2860-52a8-bff14f27a236"
-
-        mock = MagicMock()
-        mock.get_symbol.side_effect = mock_get_symbol
-        mock.get_symbol_uuid.side_effect = mock_get_symbol_uuid
-        return mock
 
     def test_get_caaj_join_pool(self):
 
@@ -371,12 +369,12 @@ class TestOsmosisPlugin:
         assert caajs[0].executed_at == "2022-01-20 06:39:04"
         assert caajs[0].chain == "osmosis"
         assert caajs[0].platform == "osmosis"
-        assert caajs[0].application == "lend"
+        assert caajs[0].application == "osmosis"
         assert (
             caajs[0].transaction_id
             == "727E12088812C7458061EB5B2284A9DBBBFBED15E3B4E174055912B8FE2F69D3"
         )
-        assert caajs[0].type == "deposit"
+        assert caajs[0].type == "receive"
         assert caajs[0].amount == "0.25"
         assert caajs[0].token_symbol == "atom"
         assert (
@@ -445,6 +443,3 @@ class TestOsmosisPlugin:
         )
         csv_reader = csv.DictReader(csv_file)
         return list(csv_reader)
-
-if __name__ == "__main__":
-    TestOsmosisPlugin.test_get_caajs_ibc_received_effect1(1)
