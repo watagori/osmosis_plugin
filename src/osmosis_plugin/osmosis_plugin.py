@@ -56,6 +56,8 @@ class OsmosisPlugin:
         elif transaction_type == "MsgUpdateClient":
             caaj.extend(OsmosisPlugin._get_caaj_update_client(address, transaction, token_table))
             return caaj  # it ignores fee because this address does not pay fee in case of MsgUpdateClient.
+        else:
+            raise Exception(f"This type of transaction is not defined. transaction_id: {transaction.get_transaction_id()}")
 
         transaction_fee = transaction.get_transaction_fee()
         if transaction_fee != 0:
