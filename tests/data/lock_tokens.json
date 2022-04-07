@@ -24,7 +24,10 @@
                 "key": "receiver",
                 "value": "osmo1njty28rqtpw6n59sjj4esw76enp4mg6g7cwrhc"
               },
-              { "key": "amount", "value": "2000000000000000gamm/pool/497" }
+              {
+                "key": "amount",
+                "value": "2000000000000000gamm/pool/497"
+              }
             ]
           },
           {
@@ -34,26 +37,44 @@
                 "key": "spender",
                 "value": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m"
               },
-              { "key": "amount", "value": "2000000000000000gamm/pool/497" }
+              {
+                "key": "amount",
+                "value": "2000000000000000gamm/pool/497"
+              }
             ]
           },
           {
             "type": "lock_tokens",
             "attributes": [
-              { "key": "period_lock_id", "value": "871062" },
+              {
+                "key": "period_lock_id",
+                "value": "871062"
+              },
               {
                 "key": "owner",
                 "value": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m"
               },
-              { "key": "amount", "value": "2000000000000000gamm/pool/497" },
-              { "key": "duration", "value": "24h0m0s" },
-              { "key": "unlock_time", "value": "0001-01-01 00:00:00 +0000 UTC" }
+              {
+                "key": "amount",
+                "value": "2000000000000000gamm/pool/497"
+              },
+              {
+                "key": "duration",
+                "value": "24h0m0s"
+              },
+              {
+                "key": "unlock_time",
+                "value": "0001-01-01 00:00:00 +0000 UTC"
+              }
             ]
           },
           {
             "type": "message",
             "attributes": [
-              { "key": "action", "value": "lock_tokens" },
+              {
+                "key": "action",
+                "value": "lock_tokens"
+              },
               {
                 "key": "sender",
                 "value": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m"
@@ -71,7 +92,10 @@
                 "key": "sender",
                 "value": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m"
               },
-              { "key": "amount", "value": "2000000000000000gamm/pool/497" }
+              {
+                "key": "amount",
+                "value": "2000000000000000gamm/pool/497"
+              }
             ]
           }
         ]
@@ -89,7 +113,10 @@
             "owner": "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
             "duration": "86400s",
             "coins": [
-              { "denom": "gamm/pool/497", "amount": "2000000000000000" }
+              {
+                "denom": "gamm/pool/497",
+                "amount": "2000000000000000"
+              }
             ]
           }
         ],
@@ -106,13 +133,20 @@
               "key": "A8IP5t2eHTVOrTaxi6vKgjYIa8fGCzmvJX1xEmWcvQcn"
             },
             "mode_info": {
-              "single": { "mode": "SIGN_MODE_LEGACY_AMINO_JSON" }
+              "single": {
+                "mode": "SIGN_MODE_LEGACY_AMINO_JSON"
+              }
             },
             "sequence": "6"
           }
         ],
         "fee": {
-          "amount": [{ "denom": "uosmo", "amount": "0" }],
+          "amount": [
+            {
+              "denom": "uosmo",
+              "amount": "0"
+            }
+          ],
           "gas_limit": "250000",
           "payer": "",
           "granter": ""

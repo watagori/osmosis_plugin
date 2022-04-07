@@ -1,15 +1,21 @@
 # osmosis plugin
+
 ## docker
+
 ### For start
+
 $ docker-compose up -d
 
 ### For access to shell in the container
+
 $ docker-compose exec osmosis_plugin bash
 
 ### For end
+
 $ docker-compose down
 
 ### For remove
+
 $ docker-compose down --rmi all --volumes --remove-orphans
 
 ### For test
