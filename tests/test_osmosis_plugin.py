@@ -220,7 +220,7 @@ class TestOsmosisPlugin:
             caajs[2].transaction_id
             == "266ADD2B17FCDD5BBEA5499EF863AC7463C45FB6F537E02FCCA8EE048255F4D2"
         )
-        assert caajs[2].type == "get_liquidity"
+        assert caajs[2].type == "get_bonds"
         assert caajs[2].amount == "0.004323192512586978"
         assert caajs[2].token_symbol is None
         assert caajs[2].token_original_id == "gamm/pool/497"
@@ -311,7 +311,7 @@ class TestOsmosisPlugin:
             caajs[2].transaction_id
             == "8AA91C46E026F135C18BC37DA813A1682F283EFF7E5AE60899F740DE58470FBB"
         )
-        assert caajs[2].type == "lose_liquidity"
+        assert caajs[2].type == "lose_bonds"
         assert caajs[2].amount == "0.001161596256293489"
         assert caajs[2].token_symbol is None
         assert caajs[2].token_original_id == "gamm/pool/497"
