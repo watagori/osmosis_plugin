@@ -119,7 +119,7 @@ class TestOsmosisPlugin:
             caajs[1].transaction_id
             == "97A5C4A33FA36397A342D34D576AC07BA3F5CB5B7274E2BAF7092470A681FDEB"
         )
-        assert caajs[1].type == "lose"
+        assert caajs[1].type == "get"
         assert caajs[1].amount == "0.005147"
         assert caajs[1].token_symbol == "juno"
         assert (
@@ -132,6 +132,7 @@ class TestOsmosisPlugin:
             == "osmo1h7yfu7x4qsv2urnkl4kzydgxegdfyjdry5ee4xzj98jwz0uh07rqdkmprr"
         )
         assert caajs[1].comment == ""
+        assert caajs[0].trade_uuid == caajs[1].trade_uuid
 
     def test_get_caaj_transfer(self):
         test_data = TestOsmosisPlugin._get_test_data("ibc_transfer")
