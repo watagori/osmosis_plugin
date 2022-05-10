@@ -1,27 +1,32 @@
 import csv
 import json
-from unittest.mock import patch
+import os
+from pathlib import Path
+from typing import Union
+from unittest.mock import MagicMock
 
 from senkalib.chain.osmosis.osmosis_transaction import OsmosisTransaction
 
 from osmosis_plugin.osmosis_plugin import OsmosisPlugin
-from senkalib.senka_lib import SenkaLib
-
-import pandas as pd
-import os
-from pathlib import Path
-from unittest.mock import MagicMock
 
 
 class TestOsmosisPlugin:
     @classmethod
     def get_token_table_mock(cls):
-        def mock_get_symbol(chain: str, token_original_id: str) -> str:
+        def mock_get_symbol(chain: str, token_original_id: str) -> Union[str, None]:
             if chain == "osmosis" and token_original_id is None:
                 return "osmo"
-            elif chain == "osmosis" and token_original_id == "ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED":
+            elif (
+                chain == "osmosis"
+                and token_original_id
+                == "ibc/46B44899322F3CD854D2D46DEEF881958467CDD4B3B10086DA49296BBED94BED"
+            ):
                 return "juno"
-            elif chain == "osmosis" and token_original_id == "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2":
+            elif (
+                chain == "osmosis"
+                and token_original_id
+                == "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2"
+            ):
                 return "atom"
             else:
                 return None
@@ -51,9 +56,7 @@ class TestOsmosisPlugin:
         transaction = OsmosisTransaction(test_data)
         mock = TestOsmosisPlugin.get_token_table_mock()
         caajs = OsmosisPlugin.get_caajs(
-            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
-            transaction,
-            mock
+            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction, mock
         )
         assert caajs[1].executed_at == "2022-02-08 01:43:31"
         assert caajs[1].chain == "osmosis"
@@ -76,9 +79,7 @@ class TestOsmosisPlugin:
         transaction = OsmosisTransaction(test_data)
         mock = TestOsmosisPlugin.get_token_table_mock()
         caajs = OsmosisPlugin.get_caajs(
-            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
-            transaction,
-            mock
+            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction, mock
         )
         assert len(caajs) == 2
 
@@ -87,9 +88,7 @@ class TestOsmosisPlugin:
         transaction = OsmosisTransaction(test_data)
         mock = TestOsmosisPlugin.get_token_table_mock()
         caajs = OsmosisPlugin.get_caajs(
-            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
-            transaction,
-            mock
+            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction, mock
         )
 
         assert caajs[0].executed_at == "2022-01-21 02:47:05"
@@ -139,9 +138,7 @@ class TestOsmosisPlugin:
         transaction = OsmosisTransaction(test_data)
         mock = TestOsmosisPlugin.get_token_table_mock()
         caajs = OsmosisPlugin.get_caajs(
-            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
-            transaction,
-            mock
+            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction, mock
         )
         assert caajs[0].executed_at == "2022-02-08 01:43:31"
         assert caajs[0].chain == "osmosis"
@@ -168,9 +165,7 @@ class TestOsmosisPlugin:
         transaction = OsmosisTransaction(test_data)
         mock = TestOsmosisPlugin.get_token_table_mock()
         caajs = OsmosisPlugin.get_caajs(
-            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
-            transaction,
-            mock
+            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction, mock
         )
         assert caajs[0].executed_at == "2022-01-21 02:50:09"
         assert caajs[0].chain == "osmosis"
@@ -234,9 +229,7 @@ class TestOsmosisPlugin:
         transaction = OsmosisTransaction(test_data)
         mock = TestOsmosisPlugin.get_token_table_mock()
         caajs = OsmosisPlugin.get_caajs(
-            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
-            transaction,
-            mock
+            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction, mock
         )
         assert caajs[0].executed_at == "2022-01-21 02:52:07"
         assert caajs[0].chain == "osmosis"
@@ -259,9 +252,7 @@ class TestOsmosisPlugin:
         transaction = OsmosisTransaction(test_data)
         mock = TestOsmosisPlugin.get_token_table_mock()
         caajs = OsmosisPlugin.get_caajs(
-            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
-            transaction,
-            mock
+            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction, mock
         )
         assert caajs[0].executed_at == "2022-01-21 02:54:12"
         assert caajs[0].chain == "osmosis"
@@ -325,9 +316,7 @@ class TestOsmosisPlugin:
         transaction = OsmosisTransaction(test_data)
         mock = TestOsmosisPlugin.get_token_table_mock()
         caajs = OsmosisPlugin.get_caajs(
-            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
-            transaction,
-            mock
+            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction, mock
         )
 
         assert caajs[0].executed_at == "2022-01-31 09:15:23"
@@ -351,9 +340,7 @@ class TestOsmosisPlugin:
         transaction = OsmosisTransaction(test_data)
         mock = TestOsmosisPlugin.get_token_table_mock()
         caajs = OsmosisPlugin.get_caajs(
-            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
-            transaction,
-            mock
+            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction, mock
         )
         assert len(caajs) == 0
 
@@ -362,9 +349,7 @@ class TestOsmosisPlugin:
         transaction = OsmosisTransaction(test_data)
         mock = TestOsmosisPlugin.get_token_table_mock()
         caajs = OsmosisPlugin.get_caajs(
-            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m",
-            transaction,
-            mock
+            "osmo14ls9rcxxd5gqwshj85dae74tcp3umypp786h3m", transaction, mock
         )
 
         assert caajs[0].executed_at == "2022-01-20 06:39:04"
@@ -440,7 +425,10 @@ class TestOsmosisPlugin:
     @classmethod
     def mock_get_token_original_ids(cls):
         csv_file = open(
-            Path("%s/data/token_original_ids/token_original_id.csv" % os.path.dirname(__file__))
+            Path(
+                "%s/data/token_original_ids/token_original_id.csv"
+                % os.path.dirname(__file__)
+            )
         )
         csv_reader = csv.DictReader(csv_file)
         return list(csv_reader)

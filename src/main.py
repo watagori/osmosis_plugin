@@ -4,11 +4,10 @@ import pandas as pd
 from senkalib.chain.osmosis.osmosis_transaction_generator import (
     OsmosisTransactionGenerator,
 )
-from senkalib.senka_lib import SenkaLib
 from senkalib.senka_setting import SenkaSetting
 from senkalib.token_original_id_table import TokenOriginalIdTable
-from osmosis_plugin.osmosis_plugin import OsmosisPlugin
 
+from osmosis_plugin.osmosis_plugin import OsmosisPlugin
 
 TOKEN_ORIGINAL_IDS_URL = "https://raw.githubusercontent.com/ca3-caaip/token_original_id/master/token_original_id.csv"
 
