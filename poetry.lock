@@ -673,7 +673,7 @@ diagrams = ["railroad-diagrams", "jinja2"]
 
 [[package]]
 name = "pyright"
-version = "1.1.248"
+version = "1.1.249"
 description = "Command line wrapper for pyright"
 category = "dev"
 optional = false
@@ -832,9 +832,9 @@ web3 = "^5.29.0"
 
 [package.source]
 type = "git"
-url = 'https://github.com/watagori/senkalib.git'
-reference = '225d7d90296daec9177dba15388b34386e1cf3c2'
-resolved_reference = "225d7d90296daec9177dba15388b34386e1cf3c2"
+url = 'https://github.com/ca3-caaip/senkalib.git'
+reference = '87fb3e6a03f55b4e50b6d8a4706198f9c68c3d18'
+resolved_reference = "87fb3e6a03f55b4e50b6d8a4706198f9c68c3d18"
 
 [[package]]
 name = "six"
@@ -968,7 +968,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "ced47af1337cbde070855cafd05f6a7df7be3db7124a980326f71448af321feb"
+content-hash = "27aebac2f01c89c093d6fe4dc6ea7b3fb908209ce030d4dfdf1838543e2e1558"
 
 [metadata.files]
 aiohttp = [
@@ -1525,8 +1525,8 @@ pyparsing = [
     {file = "pyparsing-3.0.9.tar.gz", hash = "sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"},
 ]
 pyright = [
-    {file = "pyright-1.1.248-py3-none-any.whl", hash = "sha256:385084c1eaea56ee7b727d6f83a35774abe35036e37d527a692a9842af4c754d"},
-    {file = "pyright-1.1.248.tar.gz", hash = "sha256:88c9be21af5e21749d4ca4e6a605800bdc0848312eac9ff7cc584b401d9696d8"},
+    {file = "pyright-1.1.249-py3-none-any.whl", hash = "sha256:f30138654f57d041e4af27e71a737de502d7475c5b588ab5a9990c1a30a0b6f9"},
+    {file = "pyright-1.1.249.tar.gz", hash = "sha256:b7989a32462131b5edb1940944b6e1cfb660ae490c3a86c3221a39a643eb8663"},
 ]
 pyrsistent = [
     {file = "pyrsistent-0.18.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:df46c854f490f81210870e509818b729db4488e1f30f2a1ce1698b2295a878d1"},
